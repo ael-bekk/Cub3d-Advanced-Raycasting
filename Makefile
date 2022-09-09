@@ -14,6 +14,17 @@ all:	$(NAME) $(SRCS)
 
 $(NAME): $(SRCS)
 	make -C lib
+	cd img/guns
+	tar -xf g1.zip
+	tar -xf g2.zip
+	tar -xf g3.zip
+	tar -xf g4.zip
+	tar -xf g5.zip
+	tar -xf g6.zip
+	tar -xf g7.zip
+	tar -xf g8.zip
+	tar -xf g9.zip
+	cd ../../
 	$(FLGS)  -lmlx -framework OpenGL -framework AppKit -Ofast -g3 -flto -march=native  -O3 -ffast-math -msse4.2 -mtune=intel lib/libmlx.a $(SRCS) -o $(NAME)
 
 clean: 
