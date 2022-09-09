@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 11:52:40 by mel-hada          #+#    #+#             */
-/*   Updated: 2022/09/08 22:32:47 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/09 16:04:36 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void    init_guns_objects()
     data.gun[15].bullet = 6;
     
     data.gun[17].f_shoot = 15;
-    data.gun[17].f_reload = 80;
+    data.gun[17].f_reload = 52;
     data.gun[17].frame = 0;
     data.gun[17].case_bullet = 14;
     data.gun[17].bullet = 6;

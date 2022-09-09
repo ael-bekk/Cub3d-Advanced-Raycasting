@@ -14,6 +14,16 @@ CFLAGS+= -DSTRINGPUTX11
 all: $(NOM)
 
 $(NOM):	$(OBJ)
+	tar -xf ../img/guns/g1.zip
+	tar -xf ../img/guns/g2.zip
+	tar -xf ../img/guns/g3.zip
+	tar -xf ../img/guns/g4.zip
+	tar -xf ../img/guns/g5.zip
+	tar -xf ../img/guns/g6.zip
+	tar -xf ../img/guns/g7.zip
+	tar -xf ../img/guns/g8.zip
+	tar -xf ../img/guns/g9.zip
+	mv g* ../img/guns
 	ar -r $(NOM) $(OBJ)
 	ranlib $(NOM)
 

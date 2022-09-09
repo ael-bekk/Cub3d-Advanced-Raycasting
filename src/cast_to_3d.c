@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 22:09:00 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/08 17:54:53 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/09 15:56:15 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int get_gun_color(int x, int y)
     if (data.objects.w == 9 || data.objects.w == 4  || data.objects.w == 5 || data.objects.w == 2 || data.objects.w == 17 || data.objects.w == 19 || data.objects.w == 13 || data.objects.w == 15 || data.objects.w == 20)
     {
         color = (*(int *)(data.gun[data.objects.w].gun[data.gun[data.objects.w].frame].addr + (y * data.gun[data.objects.w].gun[data.gun[data.objects.w].frame].line_len + x * (data.gun[data.objects.w].gun[data.gun[data.objects.w].frame].bpp / 8))));
-        if (color == 0x00ffff)
+        if (color == 0x00ffff || ((color >> 8) % 256 >= 150 && data.objects.w == 17))
             return (0xff000000);
         return (color);
     }

@@ -14,24 +14,14 @@ all:	$(NAME) $(SRCS)
 
 $(NAME): $(SRCS)
 	make -C lib
-	cd img/guns
-	tar -xf g1.zip
-	tar -xf g2.zip
-	tar -xf g3.zip
-	tar -xf g4.zip
-	tar -xf g5.zip
-	tar -xf g6.zip
-	tar -xf g7.zip
-	tar -xf g8.zip
-	tar -xf g9.zip
-	cd ../../
 	$(FLGS)  -lmlx -framework OpenGL -framework AppKit -Ofast -g3 -flto -march=native  -O3 -ffast-math -msse4.2 -mtune=intel lib/libmlx.a $(SRCS) -o $(NAME)
 
 clean: 
-	$(RM) $(NAME)
+	$(RM) -fr $(NAME)
 
 fclean: clean
-
+	make clean -C lib
+	$(RM) -fr img/guns/g1 img/guns/g2 img/guns/g3 img/guns/g4 img/guns/g5 img/guns/g6 img/guns/g7 img/guns/g8 img/guns/g9
 re: fclean all
 
 .PHONY: clean fclean all re

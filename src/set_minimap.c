@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 15:16:54 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/08 17:54:25 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/09 18:54:10 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,6 @@ void    set_rays()
 void    set_char_to_win()
 {
     mlx_clear_window(data.mlx.mlx_ptr, data.mlx.win_ptr);
-    // mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.mlx.none, 0, 0);
     set_rays();
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.img.mlx_img, 0, 0);
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.mlx.player, MX, MY);
@@ -413,8 +412,7 @@ void    set_minimap()
 
     data.mlx.mlx_ptr = mlx_init();
     data.mlx.win_ptr = mlx_new_window(data.mlx.mlx_ptr, RES_X, RES_Y, "map");
-    pthread_create(&t, NULL, &time_count, NULL);
-    pthread_create(&t2, NULL, &check_sound, NULL);
+
     data.img.mlx_img = mlx_new_image(data.mlx.mlx_ptr, RES_X, RES_Y);
     data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
 
@@ -601,6 +599,8 @@ void    set_minimap()
     init_img_control();
     init_angles();
     mlx_mouse_hide();
+    pthread_create(&t, NULL, &time_count, NULL);
+    pthread_create(&t2, NULL, &check_sound, NULL);
     mlx_hook(data.mlx.win_ptr, 2, 1L<<0, key_press, NULL);
     mlx_hook(data.mlx.win_ptr, 3, 1L<<1, key_release, NULL);
     

@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:32:22 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/08 22:36:59 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/09 17:49:25 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -452,13 +452,19 @@ void    render_game()
 			data.c += 3 * (!!((data.mv / 5) % 2) - !((data.mv / 5) % 2)),
 			data.g_mv -= 3 * (!!((data.mv / 5) % 2) - !((data.mv++ / 5) % 2)),
 			down();
-		if (data.keys[data.intro.g_k[8]] && data.aim < 8)
+		if (data.gun[data.objects.w].bullet && data.keys[data.intro.g_k[8]] && data.aim < 10)
 		{
+			if (data.objects.w == 17)
+				data.gun[data.objects.w].frame = 53 + data.aim;
 			data.aim++;
 			zoom(data.aim);
 		}
-		else if (!data.keys[data.intro.g_k[8]] && data.aim > 0)
+		else if ((!data.keys[data.intro.g_k[8]] || !data.gun[data.objects.w].bullet) && data.aim > 0)
 		{
+			if (data.objects.w == 17)
+				data.gun[data.objects.w].frame = 53 + data.aim;
+			if (data.objects.w == 17 && data.aim == 1)
+				data.gun[data.objects.w].frame = 15;
 			zoom(-data.aim);
 			data.aim--;
 		}
@@ -473,21 +479,32 @@ void    render_game()
 		}
 		else if (data.objects.w == 17 && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet) && (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame || !data.gun[data.objects.w].bullet))
 		{
-			data.gun[data.objects.w].frame++;
-			if (!data.gun[data.objects.w].bullet && data.gun[data.objects.w].frame < data.gun[data.objects.w].f_shoot)
-				data.gun[data.objects.w].frame = data.gun[data.objects.w].f_shoot;
-			if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_shoot && data.gun[data.objects.w].bullet)
-				data.gun[data.objects.w].frame = 0,
-				data.gun[data.objects.w].bullet--;
-			if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_reload && !data.gun[data.objects.w].bullet)
-				data.gun[data.objects.w].frame = 0,
-				data.gun[data.objects.w].case_bullet--,
-				data.gun[data.objects.w].bullet = 12;
-    		data.use_gun = 0;
-			if (data.gun[data.objects.w].frame < 2 && data.objects.w == 13 && data.keys[data.intro.g_k[7]] && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet))
-				data.gun[data.objects.w].frame = 2;
+			if (data.aim && data.objects.w == 17)
+			{
+				if (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame > 63)
+					data.gun[data.objects.w].frame++;
+				if (data.gun[data.objects.w].frame > 80 && data.gun[data.objects.w].bullet)
+					data.gun[data.objects.w].frame = 63,
+					data.gun[data.objects.w].bullet--;
+			}
+			else
+			{
+				data.gun[data.objects.w].frame++;
+				if (!data.gun[data.objects.w].bullet && data.gun[data.objects.w].frame < data.gun[data.objects.w].f_shoot)
+					data.gun[data.objects.w].frame = data.gun[data.objects.w].f_shoot;
+				if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_shoot && data.gun[data.objects.w].bullet)
+					data.gun[data.objects.w].frame = 0,
+					data.gun[data.objects.w].bullet--;
+				if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_reload && !data.gun[data.objects.w].bullet)
+					data.gun[data.objects.w].frame = 0,
+					data.gun[data.objects.w].case_bullet--,
+					data.gun[data.objects.w].bullet = 12;
+				data.use_gun = 0;
+				if (data.gun[data.objects.w].frame < 2 && data.objects.w == 13 && data.keys[data.intro.g_k[7]] && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet))
+					data.gun[data.objects.w].frame = 2;
+			}
 		}
-		else if ((data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet) && (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame || !data.gun[data.objects.w].bullet))
+		else if (data.objects.w != 17 && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet) && (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame || !data.gun[data.objects.w].bullet))
 		{
 			data.gun[data.objects.w].frame++;
 			
