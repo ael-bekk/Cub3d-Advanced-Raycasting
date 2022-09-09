@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 19:02:02 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/08/08 12:30:32 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/08/26 12:16:37 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ void    up()
     int x;
     int y;
 
-    x = round(data.dir.x + (7 + data.speed) * cos(data.dir.angle * M_PI / 180));
-    y = round(data.dir.y + (7 + data.speed) * sin(data.dir.angle * M_PI / 180));
+    x = round(data.dir.x + (7 + data.speed) * data.angles.pl_cos);
+    y = round(data.dir.y + (7 + data.speed) * data.angles.pl_sin);
         
     if (data.map[(y + 17) / 50][(x + 17) / 50] != '1'
         && data.map[(y + 17) / 50][(data.dir.x + 17) / 50] != '1'
@@ -45,8 +45,8 @@ void    down()
     int x;
     int y;
 
-    x = round(data.dir.x - 7 * cos(data.dir.angle * M_PI / 180));
-    y = round(data.dir.y - 7 * sin(data.dir.angle * M_PI / 180));
+    x = round(data.dir.x - 7 * data.angles.pl_cos);
+    y = round(data.dir.y - 7 * data.angles.pl_sin);
         
     if (data.map[(y + 17) / 50][(x + 17) / 50] != '1'
         && data.map[(y + 17) / 50][(data.dir.x + 17) / 50] != '1'
@@ -75,8 +75,7 @@ void    right_angle()
     data.dir.angle += ANGLE * data.mouse.on;
     if (data.dir.angle >= 360)
         data.dir.angle -= (double)360;
-
-    // data.mlx.player = data.dir.pl[data.dir.s / ANGLES];
+    init_angles();
 }
 
 void    left_angle()
@@ -87,7 +86,7 @@ void    left_angle()
     data.dir.angle -= ANGLE * data.mouse.on;
     if (data.dir.angle < 0)
         data.dir.angle += (double)360;
-    // data.mlx.player = data.dir.pl[data.dir.s / ANGLES];
+    init_angles();
 }
 
 void    right()
@@ -95,8 +94,8 @@ void    right()
     int x;
     int y;
 
-    x = round(data.dir.x + 7 * cos((data.dir.angle + 90) * M_PI / 180));
-    y = round(data.dir.y + 7 * sin((data.dir.angle + 90) * M_PI / 180));
+    x = round(data.dir.x + 7 * data.angles.pl_cos_plus_90);
+    y = round(data.dir.y + 7 * data.angles.pl_sin_plus_90);
         
     if (data.map[(y + 17) / 50][(x + 17) / 50] != '1'
         && data.map[(y + 17) / 50][(data.dir.x + 17) / 50] != '1'
@@ -121,8 +120,8 @@ void   left()
     int x;
     int y;
 
-    x = round(data.dir.x - 7 * cos((data.dir.angle + 90) * M_PI / 180));
-    y = round(data.dir.y - 7 * sin((data.dir.angle + 90) * M_PI / 180));
+    x = round(data.dir.x - 7 * data.angles.pl_cos_plus_90);
+    y = round(data.dir.y - 7 * data.angles.pl_sin_plus_90);
         
     if (data.map[(y + 17) / 50][(x + 17) / 50] != '1'
         && data.map[(y + 17) / 50][(data.dir.x + 17) / 50] != '1'

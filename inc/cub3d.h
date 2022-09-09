@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/21 12:41:47 by mel-hada          #+#    #+#             */
-/*   Updated: 2022/08/16 15:03:15 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/08/29 12:17:26 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include "defines.h"
 # include "structs.h"
 #include <x86intrin.h>
+# include <semaphore.h>
 
 t_data data;
 
@@ -55,9 +56,8 @@ int     ft_str_isdigit(char *s);
 int     ft_lst_size(t_map *lst);
 char	*ft_str_trim(char const *s1, char const *set);
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
-void    check_elements();
 void    replace_tab(char *s);
-void    check_file();
+void    check_map();
 int     check_all_spaces(char *s);
 void    set_minimap();
 void    set_char_to_win();
@@ -71,7 +71,7 @@ void    right();
 
 int		key_press(int key, void *d);
 void    set_rays();
-void    cast_to_3d(int i, double *cord);
+void    cast_to_3d(int i);
 void	img_pix_put(t_img *img, int x, int y, int color);
 void    before();
 int		key_release(int key, void *data);
@@ -87,6 +87,8 @@ void    paint_color(t_img *img, int color, int x_s, int y_s);
 void    set_volume();
 void    init_keys();
 void    map_appending();
-int get_color(int x, int y);
+int     set_design(int side, double x, double y, char design);
+void    init_angles();
+char	*ft_itoa(int n);
 
 #endif

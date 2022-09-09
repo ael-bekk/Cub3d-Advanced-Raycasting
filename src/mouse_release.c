@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 21:37:37 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/08/14 18:05:56 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/02 14:20:54 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,27 @@ void    mouse_release_setting(int key, int x, int y)
                 data.sound.click = 1,
                 exit (0);
         }
+        if (data.mode == SETTING2)
+        {
+            if (data.mouse.on_clk[3] && x >= (RES_X - data.intro.cont.x) / 2 && y >= (RES_Y - data.intro.cont.y) / 2 - RES_Y / 6 && x < (RES_X + data.intro.cont.x) / 2 && y < (RES_Y + data.intro.cont.y) / 2 - RES_Y / 6)
+                data.sound.click = 1,
+                data.mode = GAME;
+            if (data.mouse.on_clk[4] && x >= (RES_X - data.intro.restart.x) / 2 && y >= (RES_Y - data.intro.restart.y) / 2 - RES_Y / 12 && x < (RES_X + data.intro.restart.x) / 2 && y < (RES_Y + data.intro.restart.y) / 2 - RES_Y / 12)
+                data.sound.click = 1,
+                data.mode = GAME;
+            if (data.mouse.on_clk[1] && x >= (RES_X - data.intro.sett.x) / 2 && y >= (RES_Y - data.intro.sett.y) / 2 && x < (RES_X + data.intro.sett.x) / 2 && y < (RES_Y + data.intro.sett.y) / 2)
+                data.sound.click = 1,
+                data.mode = S_CONTROL;
+            if (data.mouse.on_clk[2] && x >= (RES_X - data.intro.exit.x) / 2 && y >= (RES_Y - data.intro.exit.y) / 2 + RES_Y / 12 && x < (RES_X + data.intro.exit.x) / 2 && y < (RES_Y + data.intro.exit.y) / 2 + RES_Y / 12)
+                data.sound.click = 1,
+                exit (0);
+        }
         if (data.mode == S_CONTROL)
         {
             if (data.mouse.on_clk[5] && x >= RES_X / 2 - 225 && y >= RES_Y - 100 && x < RES_X / 2 - 75 && y < RES_Y - 40)
             {
                 data.sound.click = 1;
-                data.mode = SETTING;
+                data.mode = SETTING * !data.mouse.sett2 + SETTING2 * data.mouse.sett2;
             }
             if (data.mouse.on_clk[6] && x >= RES_X / 2 + 75 && y >= RES_Y - 100 && x < RES_X / 2 + 225 && y < RES_Y - 40)
             {
@@ -89,7 +104,11 @@ void    mouse_release_control(int key, int x, int y)
 
 void    mouse_release_game(int key)
 {
-    key = 0;
+    
+    if (data.intro.g_k[7] == M_LEFT_CLICK && key == LEFT_CLICK)
+        data.keys[data.intro.g_k[7]] = 0;
+    if (data.intro.g_k[8] == M_RIGHT_CLICK && key == RIGHT_CLICK)
+        data.keys[data.intro.g_k[8]] = 0;
 }
 
 int mouse_release(int key, int x, int y, void *w)
@@ -98,7 +117,7 @@ int mouse_release(int key, int x, int y, void *w)
     w = NULL;
     if (data.mode == INTRO)
         mouse_release_intro(key);
-    if (data.mode == SETTING)
+    if (data.mode == SETTING || data.mode == SETTING2)
         mouse_release_setting(key, x, y);
     if (data.mode == S_CONTROL)
         mouse_release_control(key, x, y);

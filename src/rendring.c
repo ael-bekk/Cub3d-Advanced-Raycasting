@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 19:53:35 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/08/14 15:00:21 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/08 21:32:17 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void    calculate_time()
     if (data.objects.t1 > 9)
         data.objects.t1 = 0,
         data.objects.t2++;
-        
+
     if (data.objects.t2 > 5)
         data.objects.t2 = 0,
         data.objects.t3++;
@@ -25,11 +25,11 @@ void    calculate_time()
     if (data.objects.t3 > 3 && data.objects.t4 == 2)
         data.objects.t3 = 0,
         data.objects.t4++;
-    
+
     if (data.objects.t3 > 9 && data.objects.t4 < 2)
         data.objects.t3 = 0,
         data.objects.t4++;
-        
+
     if (data.objects.t4 > 2)
         data.objects.t4 = 0;
 }
@@ -67,10 +67,40 @@ void    set_volume()
 void    *check_sound(void *d)
 {
     d = NULL;
-    
+
     while (1)
     {
-        usleep(1000);
+        usleep(100);
+        if (data.intro.up && !data.intro.map)
+            system("afplay sound/mini_map2.mp3");
+        if (data.sound.hit)
+            system("afplay sound/hit_sound.mp3"),
+            data.sound.hit = 0;
+        if (data.sound.scroll)
+            system("afplay sound/gun.mp3 &"),
+            data.sound.scroll = 0;
+        if (data.fov.jumping && data.dir.ph > 0.6)
+            system("afplay sound/jump.mp3"),
+            system("afplay sound/jump_end.mp3");
+        else if (data.fov.jumping)
+            system("afplay sound/jump.mp3");
+        if (data.keys[data.intro.g_k[9]])
+        {
+            system("afplay sound/run12.mp3 &");
+            usleep (10);
+            int i = 0;
+            int br = data.objects.breath;
+            while (data.keys[data.intro.g_k[9]] && ++i < 900000 && data.objects.breath > 0)
+                usleep (10),
+                data.objects.breath = br - i * 100.0 / 900000.0;
+            system("kill -9 $(ps | grep run12 | grep -v grep | sed 's/^[ \\t]*//g' | cut -d' ' -f 1)");
+            if (!data.objects.breath)
+                data.sound.breath = 1,
+                system("afplay sound/breath.mp3"),
+                data.sound.breath = 0;
+        }
+        if (!data.door.is_op && !data.door.op)
+            system("afplay sound/door1.mp3 ");
         if (data.intro.vol_click)
             set_volume();
         if (data.intro.lgt_click)

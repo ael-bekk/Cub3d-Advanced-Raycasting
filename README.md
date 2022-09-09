@@ -1,1 +1,2 @@
-# cube3d_advanced_raycasting
+# cub3d
+42 project

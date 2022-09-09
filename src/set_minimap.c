@@ -6,70 +6,134 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 15:16:54 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/08/17 18:27:41 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/08 17:54:25 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
-void    variant_calculate(double *cord, double decrease, double angl)
+void    variant_calculate_d(double *cord, double decrease, int angl)
 {
     int v;
 
     v = 0;
-    while (data.map[(int)(cord[1] + decrease * sin(angl * M_PI / 180))/50][(int)cord[0]/50] != '1'
-        && data.map[(int)cord[1] /50][(int)(cord[0] + decrease * cos(angl * M_PI / 180))/50] != '1' 
-        && data.map[(int)(cord[1] + decrease * sin(angl * M_PI / 180))/50][(int)(cord[0] + decrease * cos(angl * M_PI / 180))/50]!= '1')
+    while (data.map[(int)(cord[1] + decrease * data.angles.r_sin[angl])/50][(int)cord[0]/50] == '0'
+        && data.map[(int)cord[1] /50][(int)(cord[0] + decrease * data.angles.r_cos[angl])/50] == '0'
+        && data.map[(int)(cord[1] + decrease * data.angles.r_sin[angl])/50][(int)(cord[0] + decrease * data.angles.r_cos[angl])/50] == '0')
     {
-        cord[0] += decrease * cos(angl * M_PI / 180);
-        cord[1] += decrease * sin(angl * M_PI / 180);
+        cord[0] += decrease * data.angles.r_cos[angl];
+        cord[1] += decrease * data.angles.r_sin[angl];
         v = 1;
     }
     if (v)
     {
-        cord[0] -= decrease * cos(angl * M_PI / 180);
-        cord[1] -= decrease * sin(angl * M_PI / 180);
+        cord[0] -= decrease * data.angles.r_cos[angl];
+        cord[1] -= decrease * data.angles.r_sin[angl];
     }
+}
+
+void    variant_calculate(double *cord, double decrease, int angl)
+{
+    int v;
+
+    v = 0;
+    while (data.map[(int)(cord[1] + decrease * data.angles.r_sin[angl])/50][(int)cord[0]/50] != '1'
+        && data.map[(int)cord[1] /50][(int)(cord[0] + decrease * data.angles.r_cos[angl])/50] != '1'
+        && data.map[(int)(cord[1] + decrease * data.angles.r_sin[angl])/50][(int)(cord[0] + decrease * data.angles.r_cos[angl])/50] != '1')
+    {
+        cord[0] += decrease * data.angles.r_cos[angl];
+        cord[1] += decrease * data.angles.r_sin[angl];
+        v = 1;
+    }
+    if (v)
+    {
+        cord[0] -= decrease * data.angles.r_cos[angl];
+        cord[1] -= decrease * data.angles.r_sin[angl];
+    }
+}
+
+void    init_angles()
+{
+    double  r;
+    double  angl;
+    int     i;
+
+    i = -1;
+    r = -30;
+    while (++i < RES_X)
+    {
+        angl = data.dir.angle + r;
+        data.angles.r_cos[i] = cos(angl * M_PI / 180);
+        data.angles.r_sin[i] = sin(angl * M_PI / 180);
+        data.angles.r_res_cos[i] = cos(r * M_PI / 180);
+        r += 0.04;
+    }
+    data.angles.pl_cos = cos(data.dir.angle * M_PI / 180);
+    data.angles.pl_sin = sin(data.dir.angle * M_PI / 180);
+    data.angles.pl_cos_plus_90 = cos((data.dir.angle + 90) * M_PI / 180);
+    data.angles.pl_sin_plus_90 = sin((data.dir.angle + 90) * M_PI / 180);
+    data.angles.cte_tan = tan(30 * M_PI / 180);
 }
 
 void    set_rays()
 {
     int i;
-    double r;
     double cord[2];
-    double angl;
 
     i = 0;
-    r = -30;
     while (i < RES_X)
     {
-        angl = data.dir.angle + r;
+        data.color[i][0] = 0;
         cord[0] = data.dir.x + 17;
         cord[1] = data.dir.y + 17;
-        variant_calculate(cord, 40, angl);
-        variant_calculate(cord, 10, angl);
-        variant_calculate(cord, 1, angl);
-        variant_calculate(cord, 0.1, angl);
+        data.indx = i;
+        variant_calculate_d(cord, 45, i);
+        variant_calculate_d(cord, 20, i);
+        variant_calculate_d(cord, 10, i);
+        variant_calculate_d(cord, 1, i);
+        variant_calculate_d(cord, 0.1, i);
+        data.door.hit_wall = 0;
+        if (data.map[(int)(cord[1] + data.angles.r_sin[i])/50][(int)cord[0]/50] == 'H' || data.map[(int)cord[1]/50][(int)(cord[0] + data.angles.r_cos[i])/50] == 'H')
+        {
+            data.door.cord[0] = (int)cord[0];
+            data.door.cord[1] = (int)cord[1];
+            data.color[i][0] = 1;
+            data.door.is_op = !(fabs(cord[0] - data.dir.x - 17) < 90 && fabs(cord[1] - data.dir.y - 17) < 90);
+            if (data.map[(int)cord[1]/50][(int)(cord[0] + data.angles.r_cos[i])/50] == 'H' && cord[0] + data.angles.r_cos[i] > cord[0])
+                data.door.color[i][1] = (int)cord[1];
+            else if (data.map[(int)cord[1]/50][(int)(cord[0] + data.angles.r_cos[i])/50] == 'H' && cord[0] + data.angles.r_cos[i] < cord[0])
+                data.door.color[i][1] = (int)cord[1];
+            else if (data.map[(int)(cord[1] + data.angles.r_sin[i])/50][(int)cord[0]/50] == 'H' && cord[1] + data.angles.r_sin[i] > cord[1])
+                data.door.color[i][1] = (int)cord[0];
+            else if (data.map[(int)(cord[1] + data.angles.r_sin[i])/50][(int)cord[0]/50] == 'H' && cord[1] + data.angles.r_sin[i] < cord[1])
+                data.door.color[i][1] = (int)cord[0];
+            data.door.rays[i] = sqrt((cord[0] - (double)data.dir.x - 17)*(cord[0] - (double)data.dir.x - 17) + (cord[1] - (double)data.dir.y - 17)*(cord[1] - (double)data.dir.y - 17)) * data.angles.r_res_cos[i];
+            variant_calculate(cord, 45, i);
+            variant_calculate(cord, 20, i);
+            variant_calculate(cord, 10, i);
+            variant_calculate(cord, 1, i);
+            variant_calculate(cord, 0.1, i);
+            data.door.hit_wall = data.map[(int)(cord[1])/50][(int)(cord[0])/50] == 'H';
+        }
+        if (data.map[(int)cord[1]/50][(int)(cord[0] + data.angles.r_cos[i])/50] == '1' && cord[0] + data.angles.r_cos[i] > cord[0])
+            data.color[i][1] = (int)cord[1];
+        else if (data.map[(int)cord[1]/50][(int)(cord[0] + data.angles.r_cos[i])/50] == '1' && cord[0] + data.angles.r_cos[i] < cord[0])
+            data.color[i][1] = (int)cord[1];
+        else if (data.map[(int)(cord[1] + data.angles.r_sin[i])/50][(int)cord[0]/50] == '1' && cord[1] + data.angles.r_sin[i] > cord[1])
+            data.color[i][1] = (int)cord[0];
+        else if (data.map[(int)(cord[1] + data.angles.r_sin[i])/50][(int)cord[0]/50] == '1' && cord[1] + data.angles.r_sin[i] < cord[1])
+            data.color[i][1] = (int)cord[0];
 
-        if (data.map[(int)cord[1]/50][(int)(cord[0] + cos(angl * M_PI / 180))/50] == '1' && cord[0] + cos(angl * M_PI / 180) > cord[0])
-            data.color[i][0] = 0,
-            data.color[i][1] = (int)(cord[1] * 10.0 * (64.0 / 500.0)) % 64;
-        else if (data.map[(int)cord[1]/50][(int)(cord[0] + cos(angl * M_PI / 180))/50] == '1' && cord[0] + cos(angl * M_PI / 180) < cord[0])
-            data.color[i][0] = 1,
-            data.color[i][1] = (int)(cord[1] * 10.0 * (64.0 / 500.0)) % 64;
-        else if (data.map[(int)(cord[1] + sin(angl * M_PI / 180))/50][(int)cord[0]/50] == '1' && cord[1] + sin(angl * M_PI / 180) > cord[1])
-            data.color[i][0] = 2,
-            data.color[i][1] = (int)(cord[0] * 10.0 * (64.0 / 500.0)) % 64;
-        else if (data.map[(int)(cord[1] + sin(angl * M_PI / 180))/50][(int)cord[0]/50] == '1' && cord[1] + sin(angl * M_PI / 180) < cord[1])
-            data.color[i][0] = 3,
-            data.color[i][1] = (int)(cord[0] * 10.0 * (64.0 / 500.0)) % 64;
-
-        data.rays[i++] = sqrt((cord[0] - (double)data.dir.x - 17)*(cord[0] - (double)data.dir.x - 17) + (cord[1] - (double)data.dir.y - 17)*(cord[1] - (double)data.dir.y - 17)) * cos(r * M_PI / 180);
-        data.g = r;
+        data.rays[i] = sqrt((cord[0] - (double)data.dir.x - 17)*(cord[0] - (double)data.dir.x - 17) + (cord[1] - (double)data.dir.y - 17)*(cord[1] - (double)data.dir.y - 17)) * data.angles.r_res_cos[i];
+        i++;
+        data.cord = cord;
+        data.design = data.door.map[(int)(cord[1] - data.angles.r_sin[i])/50][(int)(cord[0] - data.angles.r_cos[i])/50];
         if (i <= RES_X)
-            cast_to_3d(i - 1, cord);
-        r += 0.04;
+            cast_to_3d(i - 1);
     }
+    data.light++;
+    if (data.light >= 600)
+        data.light = 0;
 }
 
 void    set_char_to_win()
@@ -80,10 +144,17 @@ void    set_char_to_win()
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.img.mlx_img, 0, 0);
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.mlx.player, MX, MY);
 
+
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t4].mlx_img, RES_X - 142, 30);
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t3].mlx_img, RES_X - 142 + 30, 30);
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t2].mlx_img, RES_X - 132 + 60, 30);
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t1].mlx_img, RES_X - 132 + 90, 30);
+
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.nums[data.gun[data.objects.w].case_bullet / 10].mlx_img, RES_X - (242 + 17 * 2), 175);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.nums[data.gun[data.objects.w].case_bullet % 10].mlx_img, RES_X - (242 + 17), 175);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.sl, RES_X - 242, 175);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.nums[data.gun[data.objects.w].bullet / 10].mlx_img, RES_X - (242 - 17), 175);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.nums[data.gun[data.objects.w].bullet % 10].mlx_img, RES_X - (242 - 17 * 2), 175);
 }
 
 void    paint_img(t_img *img, char *path, int res_x, int res_y)
@@ -206,6 +277,130 @@ void    init_img_control()
     data.intro.guide[15].addr = mlx_get_data_addr(data.intro.guide[15].mlx_img, &data.intro.guide[15].bpp, &data.intro.guide[15].line_len, &data.intro.guide[15].endian);
 }
 
+void    put_color(int i, int j, char p)
+{
+    if (data.door.map[i][j] != '0')
+        return ;
+    data.door.map[i][j] = p;
+    put_color(i + 1, j, p);
+    put_color(i - 1, j, p);
+    put_color(i, j + 1, p);
+    put_color(i, j - 1, p);
+}
+
+void    init_virtual_map()
+{
+    int i;
+    int j;
+    int p;
+
+    p = 'A';
+    i = -1;
+    while (data.door.map[++i])
+    {
+        j = -1;
+        while (data.door.map[i][++j])
+            if (data.door.map[i][j] == '0')
+                put_color(i, j, p++);
+        if (p == 'H')
+            p = 'A';
+    }
+}
+
+void path_name2(char *path, int i, int len)
+{
+	int j;
+
+	j = len;
+    path[j++] = '0' + i / 10;
+	path[j++] = '0' + i % 10;
+	path[j++] = '.';
+	path[j++] = 'x';
+	path[j++] = 'p';
+	path[j++] = 'm';
+	path[j++] = 0;
+}
+
+void    init_guns()
+{
+    int     i;
+    int     g;
+    char    path[100];
+
+    i = 0;
+	ft_memcpy(path, "img/guns/g1/", 12);
+    while (++i < 53)
+    {
+        path_name2(path, i, 12);
+        data.gun[4].gun[i - 1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, path, &g, &g);
+        data.gun[4].gun[i - 1].addr = mlx_get_data_addr(data.gun[4].gun[i - 1].mlx_img, &data.gun[4].gun[i - 1].bpp, &data.gun[4].gun[i - 1].line_len, &data.gun[4].gun[i - 1].endian);
+    }
+    i = 0;
+	ft_memcpy(path, "img/guns/g2/", 12);
+    while (++i < 15)
+    {
+        path_name2(path, i, 12);
+        data.gun[9].gun[i - 1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, path, &g, &g);
+        data.gun[9].gun[i - 1].addr = mlx_get_data_addr(data.gun[9].gun[i - 1].mlx_img, &data.gun[9].gun[i - 1].bpp, &data.gun[9].gun[i - 1].line_len, &data.gun[9].gun[i - 1].endian);
+    }
+    i = 0;
+	ft_memcpy(path, "img/guns/g3/", 12);
+    while (++i < 34)
+    {
+        path_name2(path, i, 12);
+        data.gun[2].gun[i - 1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, path, &g, &g);
+        data.gun[2].gun[i - 1].addr = mlx_get_data_addr(data.gun[2].gun[i - 1].mlx_img, &data.gun[2].gun[i - 1].bpp, &data.gun[2].gun[i - 1].line_len, &data.gun[2].gun[i - 1].endian);
+    }
+    i = 0;
+	ft_memcpy(path, "img/guns/g4/", 12);
+    while (++i < 50)
+    {
+        path_name2(path, i, 12);
+        data.gun[19].gun[i - 1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, path, &g, &g);
+        data.gun[19].gun[i - 1].addr = mlx_get_data_addr(data.gun[19].gun[i - 1].mlx_img, &data.gun[19].gun[i - 1].bpp, &data.gun[19].gun[i - 1].line_len, &data.gun[19].gun[i - 1].endian);
+    }
+    i = 0;
+	ft_memcpy(path, "img/guns/g5/", 12);
+    while (++i < 27)
+    {
+        path_name2(path, i, 12);
+        data.gun[13].gun[i - 1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, path, &g, &g);
+        data.gun[13].gun[i - 1].addr = mlx_get_data_addr(data.gun[13].gun[i - 1].mlx_img, &data.gun[13].gun[i - 1].bpp, &data.gun[13].gun[i - 1].line_len, &data.gun[13].gun[i - 1].endian);
+    }
+    i = 0;
+	ft_memcpy(path, "img/guns/g6/", 12);
+    while (++i < 18)
+    {
+        path_name2(path, i, 12);
+        data.gun[15].gun[i - 1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, path, &g, &g);
+        data.gun[15].gun[i - 1].addr = mlx_get_data_addr(data.gun[15].gun[i - 1].mlx_img, &data.gun[15].gun[i - 1].bpp, &data.gun[15].gun[i - 1].line_len, &data.gun[15].gun[i - 1].endian);
+    }
+    i = 0;
+	ft_memcpy(path, "img/guns/g9/", 12);
+    while (++i < 82)
+    {
+        path_name2(path, i, 12);
+        data.gun[17].gun[i - 1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, path, &g, &g);
+        data.gun[17].gun[i - 1].addr = mlx_get_data_addr(data.gun[17].gun[i - 1].mlx_img, &data.gun[17].gun[i - 1].bpp, &data.gun[17].gun[i - 1].line_len, &data.gun[17].gun[i - 1].endian);
+    }
+    i = 0;
+	ft_memcpy(path, "img/guns/g7/", 12);
+    while (++i < 25)
+    {
+        path_name2(path, i, 12);
+        data.gun[20].gun[i - 1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, path, &g, &g);
+        data.gun[20].gun[i - 1].addr = mlx_get_data_addr(data.gun[20].gun[i - 1].mlx_img, &data.gun[20].gun[i - 1].bpp, &data.gun[20].gun[i - 1].line_len, &data.gun[20].gun[i - 1].endian);
+    }
+    i = 0;
+	ft_memcpy(path, "img/guns/g8/", 12);
+    while (++i < 27)
+    {
+        path_name2(path, i, 12);
+        data.gun[5].gun[i - 1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, path, &g, &g);
+        data.gun[5].gun[i - 1].addr = mlx_get_data_addr(data.gun[5].gun[i - 1].mlx_img, &data.gun[5].gun[i - 1].bpp, &data.gun[5].gun[i - 1].line_len, &data.gun[5].gun[i - 1].endian);
+    }
+}
+
 void    set_minimap()
 {
     int w;
@@ -223,55 +418,20 @@ void    set_minimap()
     data.img.mlx_img = mlx_new_image(data.mlx.mlx_ptr, RES_X, RES_Y);
     data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
 
-    data.n.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, data.no, &w, &h);
-    data.s.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, data.so, &w, &h);
-    data.w.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, data.we, &w, &h);
-    data.e.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, data.ea, &w, &h);
-    data.img_f.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, data.tf, &w, &h);
-    data.img_c.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, data.tc, &w, &h);
+    data.img_c.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/ceill.xpm", &w, &h);
+    data.assets.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/textures.xpm", &w, &h);
+    data.guns.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/weapons.xpm", &w, &h);
+    data.blood_hit.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/blood_hit.xpm", &w, &h);
+    data.blood_hit2.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/blood_hit.xpm", &w, &h);
     
-    data.n.addr = mlx_get_data_addr(data.n.mlx_img, &data.n.bpp, &data.n.line_len, &data.n.endian);
-    data.s.addr = mlx_get_data_addr(data.s.mlx_img, &data.s.bpp, &data.s.line_len, &data.s.endian);
-    data.w.addr = mlx_get_data_addr(data.w.mlx_img, &data.w.bpp, &data.w.line_len, &data.w.endian);
-    data.e.addr = mlx_get_data_addr(data.e.mlx_img, &data.e.bpp, &data.e.line_len, &data.e.endian);
-    data.img_f.addr = mlx_get_data_addr(data.img_f.mlx_img, &data.img_f.bpp, &data.img_f.line_len, &data.img_f.endian);
     data.img_c.addr = mlx_get_data_addr(data.img_c.mlx_img, &data.img_c.bpp, &data.img_c.line_len, &data.img_c.endian);
+    data.assets.addr = mlx_get_data_addr(data.assets.mlx_img, &data.assets.bpp, &data.assets.line_len, &data.assets.endian);
+    data.guns.addr = mlx_get_data_addr(data.guns.mlx_img, &data.guns.bpp, &data.guns.line_len, &data.guns.endian);
+    data.blood_hit.addr = mlx_get_data_addr(data.blood_hit.mlx_img, &data.blood_hit.bpp, &data.blood_hit.line_len, &data.blood_hit.endian);
+    data.blood_hit2.addr = mlx_get_data_addr(data.blood_hit2.mlx_img, &data.blood_hit2.bpp, &data.blood_hit2.line_len, &data.blood_hit2.endian);
 
 
-    data.dir.pl[0] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/0.xpm", &w, &h);
-    data.dir.pl[1] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/1.xpm", &w, &h);
-    data.dir.pl[2] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/2.xpm", &w, &h);
-    data.dir.pl[3] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/3.xpm", &w, &h);
-    data.dir.pl[4] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/4.xpm", &w, &h);
-    data.dir.pl[5] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/5.xpm", &w, &h);
-    data.dir.pl[6] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/6.xpm", &w, &h);
-    data.dir.pl[7] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/7.xpm", &w, &h);
-    data.dir.pl[8] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/8.xpm", &w, &h);
-    data.dir.pl[9] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/9.xpm", &w, &h);
-    data.dir.pl[10] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/10.xpm", &w, &h);
-    data.dir.pl[11] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/11.xpm", &w, &h);
-    data.dir.pl[12] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/12.xpm", &w, &h);
-    data.dir.pl[13] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/13.xpm", &w, &h);
-    data.dir.pl[14] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/14.xpm", &w, &h);
-    data.dir.pl[15] = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/15.xpm", &w, &h);
-    data.mlx.player = data.dir.pl[4];
-    
-    data.objects.weapon[0].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/wepp/1.xpm", &w, &h);
-    data.objects.weapon[1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/wepp/2.xpm", &w, &h);
-    data.objects.weapon[2].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/wepp/3.xpm", &w, &h);
-    data.objects.weapon[3].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/wepp/4.xpm", &w, &h);
-    data.objects.weapon[4].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/wepp/5.xpm", &w, &h);
-    data.objects.weapon[5].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/wepp/6.xpm", &w, &h);
-    data.objects.weapon[6].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/wepp/7.xpm", &w, &h);
-
-    data.objects.weapon[0].addr = mlx_get_data_addr(data.objects.weapon[0].mlx_img, &data.objects.weapon[0].bpp, &data.objects.weapon[0].line_len, &data.objects.weapon[0].endian);
-    data.objects.weapon[1].addr = mlx_get_data_addr(data.objects.weapon[1].mlx_img, &data.objects.weapon[1].bpp, &data.objects.weapon[1].line_len, &data.objects.weapon[1].endian);
-    data.objects.weapon[2].addr = mlx_get_data_addr(data.objects.weapon[2].mlx_img, &data.objects.weapon[2].bpp, &data.objects.weapon[2].line_len, &data.objects.weapon[2].endian);
-    data.objects.weapon[3].addr = mlx_get_data_addr(data.objects.weapon[3].mlx_img, &data.objects.weapon[3].bpp, &data.objects.weapon[3].line_len, &data.objects.weapon[3].endian);
-    data.objects.weapon[4].addr = mlx_get_data_addr(data.objects.weapon[4].mlx_img, &data.objects.weapon[4].bpp, &data.objects.weapon[4].line_len, &data.objects.weapon[4].endian);
-    data.objects.weapon[5].addr = mlx_get_data_addr(data.objects.weapon[5].mlx_img, &data.objects.weapon[5].bpp, &data.objects.weapon[5].line_len, &data.objects.weapon[5].endian);
-    data.objects.weapon[6].addr = mlx_get_data_addr(data.objects.weapon[6].mlx_img, &data.objects.weapon[6].bpp, &data.objects.weapon[6].line_len, &data.objects.weapon[6].endian);
-    
+    data.mlx.player = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor/4.xpm", &w, &h);
     
     data.objects.time[0].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/num/0.xpm", &w, &h);
     data.objects.time[1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/num/1.xpm", &w, &h);
@@ -296,6 +456,38 @@ void    set_minimap()
     data.objects.time[9].addr = mlx_get_data_addr(data.objects.time[9].mlx_img, &data.objects.time[9].bpp, &data.objects.time[9].line_len, &data.objects.time[9].endian);
     
     
+    data.nums[0].mlx_img = mlx_new_image(data.mlx.mlx_ptr, 15, 23);
+    data.nums[1].mlx_img = mlx_new_image(data.mlx.mlx_ptr, 15, 23);
+    data.nums[2].mlx_img = mlx_new_image(data.mlx.mlx_ptr, 15, 23);
+    data.nums[3].mlx_img = mlx_new_image(data.mlx.mlx_ptr, 15, 23);
+    data.nums[4].mlx_img = mlx_new_image(data.mlx.mlx_ptr, 15, 23);
+    data.nums[5].mlx_img = mlx_new_image(data.mlx.mlx_ptr, 15, 23);
+    data.nums[6].mlx_img = mlx_new_image(data.mlx.mlx_ptr, 15, 23);
+    data.nums[7].mlx_img = mlx_new_image(data.mlx.mlx_ptr, 15, 23);
+    data.nums[8].mlx_img = mlx_new_image(data.mlx.mlx_ptr, 15, 23);
+    data.nums[9].mlx_img = mlx_new_image(data.mlx.mlx_ptr, 15, 23);
+    data.nums[0].addr = mlx_get_data_addr(data.nums[0].mlx_img, &data.nums[0].bpp, &data.nums[0].line_len, &data.nums[0].endian);
+    data.nums[1].addr = mlx_get_data_addr(data.nums[1].mlx_img, &data.nums[1].bpp, &data.nums[1].line_len, &data.nums[1].endian);
+    data.nums[2].addr = mlx_get_data_addr(data.nums[2].mlx_img, &data.nums[2].bpp, &data.nums[2].line_len, &data.nums[2].endian);
+    data.nums[3].addr = mlx_get_data_addr(data.nums[3].mlx_img, &data.nums[3].bpp, &data.nums[3].line_len, &data.nums[3].endian);
+    data.nums[4].addr = mlx_get_data_addr(data.nums[4].mlx_img, &data.nums[4].bpp, &data.nums[4].line_len, &data.nums[4].endian);
+    data.nums[5].addr = mlx_get_data_addr(data.nums[5].mlx_img, &data.nums[5].bpp, &data.nums[5].line_len, &data.nums[5].endian);
+    data.nums[6].addr = mlx_get_data_addr(data.nums[6].mlx_img, &data.nums[6].bpp, &data.nums[6].line_len, &data.nums[6].endian);
+    data.nums[7].addr = mlx_get_data_addr(data.nums[7].mlx_img, &data.nums[7].bpp, &data.nums[7].line_len, &data.nums[7].endian);
+    data.nums[8].addr = mlx_get_data_addr(data.nums[8].mlx_img, &data.nums[8].bpp, &data.nums[8].line_len, &data.nums[8].endian);
+    data.nums[9].addr = mlx_get_data_addr(data.nums[9].mlx_img, &data.nums[9].bpp, &data.nums[9].line_len, &data.nums[9].endian);
+    paint_img(&data.nums[0], "img/num/0.xpm", 15, 23);
+    paint_img(&data.nums[1], "img/num/1.xpm", 15, 23);
+    paint_img(&data.nums[2], "img/num/2.xpm", 15, 23);
+    paint_img(&data.nums[3], "img/num/3.xpm", 15, 23);
+    paint_img(&data.nums[4], "img/num/4.xpm", 15, 23);
+    paint_img(&data.nums[5], "img/num/5.xpm", 15, 23);
+    paint_img(&data.nums[6], "img/num/6.xpm", 15, 23);
+    paint_img(&data.nums[7], "img/num/7.xpm", 15, 23);
+    paint_img(&data.nums[8], "img/num/8.xpm", 15, 23);
+    paint_img(&data.nums[9], "img/num/9.xpm", 15, 23);
+    data.sl = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/num/sl.xpm", &w, &h);
+
     data.mouse.img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cursor.xpm", &w, &h);
     
 
@@ -306,8 +498,8 @@ void    set_minimap()
     data.mlx.floor.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/f.xpm", &w, &h);
     data.mlx.floor.addr = mlx_get_data_addr(data.mlx.floor.mlx_img, &data.mlx.floor.bpp, &data.mlx.floor.line_len, &data.mlx.floor.endian);
     
-    data.mlx.wall.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/wall.xpm", &w, &h);
-    data.mlx.wall.addr = mlx_get_data_addr(data.mlx.wall.mlx_img, &data.mlx.wall.bpp, &data.mlx.wall.line_len, &data.mlx.wall.endian);
+    // data.mlx.wall.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/wall.xpm", &w, &h);
+    // data.mlx.wall.addr = mlx_get_data_addr(data.mlx.wall.mlx_img, &data.mlx.wall.bpp, &data.mlx.wall.line_len, &data.mlx.wall.endian);
     
     data.mlx.space.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/sp.xpm", &w, &h);
     data.mlx.space.addr = mlx_get_data_addr(data.mlx.space.mlx_img, &data.mlx.space.bpp, &data.mlx.space.line_len, &data.mlx.space.endian);
@@ -392,17 +584,23 @@ void    set_minimap()
     data.intro.lgt[1].mlx_img = mlx_new_image(data.mlx.mlx_ptr, 25, 40);
     data.intro.lgt[1].addr = mlx_get_data_addr(data.intro.lgt[1].mlx_img, &data.intro.lgt[1].bpp, &data.intro.lgt[1].line_len, &data.intro.lgt[1].endian);
     paint_color(&data.intro.lgt[1], 0xffffff, 25, 40);
+    init_guns();
     
+    data.door.door[0][0].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/dor1_0.xpm", &w, &h);
+    data.door.door[0][0].addr = mlx_get_data_addr(data.door.door[0][0].mlx_img, &data.door.door[0][0].bpp, &data.door.door[0][0].line_len, &data.door.door[0][0].endian);
+    data.door.door[0][1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/dor1_1.xpm", &w, &h);
+    data.door.door[0][1].addr = mlx_get_data_addr(data.door.door[0][1].mlx_img, &data.door.door[0][1].bpp, &data.door.door[0][1].line_len, &data.door.door[0][1].endian);
+
 
     int i;
     i = -1;
     while (++i < 1000)
         data.keys[i] = 0,
         data.intro.keys[i] = NULL;
+    init_virtual_map();
     init_img_control();
-
-    
-    
+    init_angles();
+    mlx_mouse_hide();
     mlx_hook(data.mlx.win_ptr, 2, 1L<<0, key_press, NULL);
     mlx_hook(data.mlx.win_ptr, 3, 1L<<1, key_release, NULL);
     

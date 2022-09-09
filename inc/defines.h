@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 11:53:23 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/08/14 15:01:16 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/06 18:22:05 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,9 @@
 # define GAME 6
 # define G_EXIT 7
 # define G_MAP 8
+# define SETTING2 9
+# define ANIMATE_SETT2_IN 10
+# define ANIMATE_SETT2_OUT 11
 
 /*************************************************************/
 /*========          some const for the game          ========*/
@@ -92,8 +95,147 @@
 # define Y 1080 - 181
 # define MX 1500 - 186 + 16.5
 # define MY 1080 - 176 + 16.5
-# define MAP_CHAR "01NSWE "
-# define ANGLE 5.625
+# define MAP_CHAR "01NSWEH "
+# define ANGLE 2
 # define ANGLES 4
+
+/*************************************************************/
+/*========                 env assets                ========*/
+/*************************************************************/
+//--------------------------- :::  room {A}  ::: ---------------------------//
+# define FLOOR2_START__X 96
+# define FLOOR2_START__Y 40
+# define FLOOR2_SIZE_Y 7
+# define FLOOR2_SIZE_X 1
+
+# define CART1_START__X 456
+# define CART1_START__Y 40
+# define CART1_SIZE_Y 7
+# define CART1_SIZE_X 2
+
+# define SUPPORT_START__X 1392
+# define SUPPORT_START__Y 40
+# define SUPPORT_SIZE_X 4
+# define SUPPORT_SIZE_Y 4
+
+//--------------------------- :::  room {B}  ::: ---------------------------//
+# define CART2_START__X 600
+# define CART2_START__Y 40
+# define CART2_SIZE_Y 7
+# define CART2_SIZE_X 2
+
+# define CONCRETE_START__X 240
+# define CONCRETE_START__Y 576
+# define CONCRETE_SIZE_Y 2
+# define CONCRETE_SIZE_X 3
+
+# define LIGHT_START__X 744
+# define LIGHT_START__Y 40
+# define LIGHT_SIZE_X 2
+# define LIGHT_SIZE_Y 3
+
+//--------------------------- :::  room {C}  ::: ---------------------------//
+# define TECH1_2_START__X 888
+# define TECH1_2_START__Y 40
+# define TECH1_2_SIZE_Y 9
+# define TECH1_2_SIZE_X 2
+
+# define STEEL_START__X 168
+# define STEEL_START__Y 40
+# define STEEL_SIZE_Y 3
+# define STEEL_SIZE_X 4
+
+# define SUPPORT_P_START__X 1392
+# define SUPPORT_P_START__Y 40
+# define SUPPORT_P_SIZE_X 1
+# define SUPPORT_P_SIZE_Y 4
+
+# define GREED_START__X 168
+# define GREED_START__Y 256
+# define GREED_SIZE_Y 3
+# define GREED_SIZE_X 1
+
+//--------------------------- :::  room {D}  ::: ---------------------------//
+# define FLOOR3_START__X 600
+# define FLOOR3_START__Y 576
+# define FLOOR3_SIZE_Y 4
+# define FLOOR3_SIZE_X 1
+
+# define LAB_START__X 888
+# define LAB_START__Y 576
+# define LAB_SIZE_Y 3
+# define LAB_SIZE_X 5
+
+# define SUPPORT_G_START__X 1248
+# define SUPPORT_G_START__Y 576
+# define SUPPORT_G_SIZE_X 3
+# define SUPPORT_G_SIZE_Y 4
+
+//--------------------------- :::  room {E}  ::: ---------------------------//
+# define SLIME_START__X 1680
+# define SLIME_START__Y 576
+# define SLIME_SIZE_Y 2
+# define SLIME_SIZE_X 1
+
+# define LAB_B_START__X 888
+# define LAB_B_START__Y 576
+# define LAB_B_SIZE_Y 3
+# define LAB_B_SIZE_X 3
+
+# define SUPPORT_F_START__X 672
+# define SUPPORT_F_START__Y 576
+# define SUPPORT_F_SIZE_X 3
+# define SUPPORT_F_SIZE_Y 2
+
+# define PIPES_START__X 1464
+# define PIPES_START__Y 576
+# define PIPES_SIZE_X 1
+# define PIPES_SIZE_Y 1
+
+//--------------------------- :::  room {F}  ::: ---------------------------//
+# define TECH3_START__X 1104
+# define TECH3_START__Y 40
+# define TECH3_SIZE_Y 6
+# define TECH3_SIZE_X 5
+
+# define FLOOR1_START__X 24
+# define FLOOR1_START__Y 40
+# define FLOOR1_SIZE_Y 5
+# define FLOOR1_SIZE_X 1
+
+# define SUPPORT_PP_START__X 1680
+# define SUPPORT_PP_START__Y 256
+# define SUPPORT_PP_SIZE_X 1
+# define SUPPORT_PP_SIZE_Y 2
+
+# define GREED_START__X 168
+# define GREED_START__Y 256
+# define GREED_SIZE_Y 3
+# define GREED_SIZE_X 1
+
+//--------------------------- :::  room {G}  ::: ---------------------------//
+# define SZ_START__X 456 + 72
+# define SZ_START__Y 40 + 72 * 4
+# define SZ_SIZE_Y 1
+# define SZ_SIZE_X 1
+
+# define TILE_START__X 24
+# define TILE_START__Y 576
+# define TILE_SIZE_Y 6
+# define TILE_SIZE_X 3
+
+# define SUPPORT_PP_START__X 1680
+# define SUPPORT_PP_START__Y 256
+# define SUPPORT_PP_SIZE_X 1
+# define SUPPORT_PP_SIZE_Y 2
+
+# define GREED_START__X 168
+# define GREED_START__Y 256
+# define GREED_SIZE_Y 3
+# define GREED_SIZE_X 1
+
+//--------------------------- :::  door  ::: ---------------------------//
+# define DOOR_START__X 744
+# define DOOR_START__Y 40
 
 #endif

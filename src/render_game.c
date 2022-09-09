@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:32:22 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/08/17 13:25:09 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/08 22:36:59 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,9 +141,9 @@ void    render_intro1()
 
 void    render_intr(t_img *img)
 {
-	t_img img2;
-	int x;
-	int y;
+	t_img	img2;
+	int		x;
+	int		y;
 
 	mlx_clear_window(data.mlx.mlx_ptr, data.mlx.win_ptr);
 	img2.mlx_img = mlx_new_image(data.mlx.mlx_ptr, RES_X, RES_Y);
@@ -191,6 +191,82 @@ void    setting_render(t_img *img, int x, int y, int type)
 	}
 	mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, img2.mlx_img, x, y);
 	mlx_destroy_image(data.mlx.mlx_ptr, img2.mlx_img);
+}
+
+void    animate_sett_in()
+{
+	int a;
+
+	a = data.intro.animate_sett--;
+	mlx_clear_window(data.mlx.mlx_ptr, data.mlx.win_ptr);
+	mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.img.mlx_img, 0, 0);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t4].mlx_img, RES_X - 142, 30);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t3].mlx_img, RES_X - 142 + 30, 30);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t2].mlx_img, RES_X - 132 + 60, 30);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t1].mlx_img, RES_X - 132 + 90, 30);
+	mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.tr2.mlx_img, 0, 0);
+
+	setting_render(&data.intro.cont, (RES_X - data.intro.cont.x) / 2 - a * (a > 0), (RES_Y - data.intro.cont.y) / 2 - RES_Y / 6, 3);
+	setting_render(&data.intro.restart, (RES_X - data.intro.restart.x) / 2 + (a + 400) * (a + 400 > 0), (RES_Y - data.intro.restart.y) / 2 - RES_Y / 12, 4);
+	setting_render(&data.intro.sett, (RES_X - data.intro.sett.x) / 2 - (a + 800) * (a + 800 > 0), (RES_Y - data.intro.sett.y) / 2, 1);
+	setting_render(&data.intro.exit, (RES_X - data.intro.exit.x) / 2 + (a + 1200) * (a + 1200 > 0), (RES_Y - data.intro.exit.y) / 2 + RES_Y / 12, 2);
+	data.intro.animate_sett -= 60;
+	if (data.intro.animate_sett < -1200)
+		data.mode = SETTING2;
+}
+
+void    animate_sett_out()
+{
+	int a;
+
+	a = data.intro.animate_sett++;
+	mlx_clear_window(data.mlx.mlx_ptr, data.mlx.win_ptr);
+	mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.img.mlx_img, 0, 0);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t4].mlx_img, RES_X - 142, 30);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t3].mlx_img, RES_X - 142 + 30, 30);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t2].mlx_img, RES_X - 132 + 60, 30);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t1].mlx_img, RES_X - 132 + 90, 30);
+	mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.tr2.mlx_img, 0, 0);
+
+	setting_render(&data.intro.cont, (RES_X - data.intro.cont.x) / 2 - a * (a > 0), (RES_Y - data.intro.cont.y) / 2 - RES_Y / 6, 3);
+	setting_render(&data.intro.restart, (RES_X - data.intro.restart.x) / 2 + (a + 400) * (a + 400 > 0), (RES_Y - data.intro.restart.y) / 2 - RES_Y / 12, 4);
+	setting_render(&data.intro.sett, (RES_X - data.intro.sett.x) / 2 - (a + 800) * (a + 800 > 0), (RES_Y - data.intro.sett.y) / 2, 1);
+	setting_render(&data.intro.exit, (RES_X - data.intro.exit.x) / 2 + (a + 1200) * (a + 1200 > 0), (RES_Y - data.intro.exit.y) / 2 + RES_Y / 12, 2);
+	data.intro.animate_sett += 60;
+	if (data.intro.animate_sett > 700)
+		data.mode = GAME;
+}
+
+void    render_setting2()
+{
+	mlx_clear_window(data.mlx.mlx_ptr, data.mlx.win_ptr);
+	mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.img.mlx_img, 0, 0);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t4].mlx_img, RES_X - 142, 30);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t3].mlx_img, RES_X - 142 + 30, 30);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t2].mlx_img, RES_X - 132 + 60, 30);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t1].mlx_img, RES_X - 132 + 90, 30);
+	mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.tr2.mlx_img, 0, 0);
+
+	setting_render(&data.intro.cont, (RES_X - data.intro.cont.x) / 2, (RES_Y - data.intro.cont.y) / 2 - RES_Y / 6, 3);
+	setting_render(&data.intro.restart, (RES_X - data.intro.restart.x) / 2, (RES_Y - data.intro.restart.y) / 2 - RES_Y / 12, 4);
+	setting_render(&data.intro.sett, (RES_X - data.intro.sett.x) / 2, (RES_Y - data.intro.sett.y) / 2, 1);
+	setting_render(&data.intro.exit, (RES_X - data.intro.exit.x) / 2, (RES_Y - data.intro.exit.y) / 2 + RES_Y / 12, 2);
+	if (data.mouse.on_clk[3])
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.gun.mlx_img, (RES_X - data.intro.cont.x) / 2 - 40, (RES_Y - data.intro.cont.y) / 2 - RES_Y / 6 + 40);
+	else if (data.mouse.on_clk[4])
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.gun.mlx_img, (RES_X - data.intro.restart.x) / 2 - 40, (RES_Y - data.intro.restart.y) / 2 - RES_Y / 12 + 40);
+	else if (data.mouse.on_clk[1])
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.gun.mlx_img, (RES_X - data.intro.start.x) / 2 - 70, (RES_Y - data.intro.sett.y) / 2 + 40);
+	else if (data.mouse.on_clk[2])
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.gun.mlx_img, (RES_X - data.intro.start.x) / 2 - 40, (RES_Y - data.intro.exit.y) / 2 + RES_Y / 12 + 40);
+	else if (data.mouse.on_hov[3])
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.gun.mlx_img, (RES_X - data.intro.cont.x) / 2 - 40, (RES_Y - data.intro.cont.y) / 2 - RES_Y / 6 + 40);
+	else if (data.mouse.on_hov[4])
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.gun.mlx_img, (RES_X - data.intro.restart.x) / 2 - 40, (RES_Y - data.intro.restart.y) / 2 - RES_Y / 12 + 40);
+	else if (data.mouse.on_hov[1])
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.gun.mlx_img, (RES_X - data.intro.start.x) / 2 - 70, (RES_Y - data.intro.sett.y) / 2 + 40);
+	else if (data.mouse.on_hov[2])
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.gun.mlx_img, (RES_X - data.intro.start.x) / 2 - 40, (RES_Y - data.intro.exit.y) / 2 + RES_Y / 12 + 40);
 }
 
 void    render_setting()
@@ -245,9 +321,20 @@ void    paint_img2(t_img *img, int x_w, int y_w, int color)
 void    render_control()
 {
 	mlx_clear_window(data.mlx.mlx_ptr, data.mlx.win_ptr);
-	mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.int2.mlx_img, 0, 0);
-	mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.tr.mlx_img, 0, 0);
-	
+	if (!data.mouse.sett2)
+	{
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.int2.mlx_img, 0, 0);
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.tr.mlx_img, 0, 0);
+	}
+	else
+	{
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.img.mlx_img, 0, 0);
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t4].mlx_img, RES_X - 142, 30);
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t3].mlx_img, RES_X - 142 + 30, 30);
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t2].mlx_img, RES_X - 132 + 60, 30);
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.objects.time[data.objects.t1].mlx_img, RES_X - 132 + 90, 30);
+		mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.tr2.mlx_img, 0, 0);
+	}
 	mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.guide[0].mlx_img, 100, 120);
 	mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.guide[data.intro.g_k[0] + 1].mlx_img, 450, 130);
 	paint_img2(&data.intro.guide[3], 400, 120, data.intro.on_hov[3]);
@@ -306,17 +393,124 @@ void    render_control()
 	setting_render(&data.intro.reset, RES_X / 2, RES_Y - 100, 6);
 }
 
+int get_lava_color(int x, int y)
+{
+    return (*(int *)(data.blood_hit.addr + (y * data.blood_hit.line_len + x * (data.blood_hit.bpp / 8))));
+}
+void	paint_hit_blood()
+{
+	int i;
+	int j;
+
+	i = -1;
+	while (++i < RES_Y)
+	{
+		j = -1;
+		while (++j < RES_X)
+			if ((unsigned int)get_lava_color(j, i) != 0xff000000)
+				img_pix_put(&data.blood_hit2, j, i, get_lava_color(j, i) + ((((data.bld * !(((data.bld) / 25) % 2)) % 25 + ((25 - data.bld % 25) * (((data.bld) / 25) % 2)) % 25) * 3 + 175) << 24));
+	}
+}
+
+void    zoom(int v)
+{
+    int x;
+    int y;
+
+    x = round(data.dir.x + v * data.angles.pl_cos);
+    y = round(data.dir.y + v * data.angles.pl_sin);
+
+    if (data.map[(y + 17) / 50][(x + 17) / 50] != '1'
+        && data.map[(y + 17) / 50][(data.dir.x + 17) / 50] != '1'
+        && data.map[(data.dir.y + 17) / 50][(x + 17) / 50] != '1'
+        && data.map[(y + 15) / 50][(x + 15) / 50] != '1'
+        && data.map[(y + 15) / 50][(data.dir.x + 15) / 50] != '1'
+        && data.map[(data.dir.y + 15) / 50][(x + 15) / 50] != '1')
+    {
+        data.dir.x = x;
+        data.dir.y = y;
+    }
+    else if (data.map[(data.dir.y + 17) / 50][(x + 17) / 50] != '1'
+            && data.map[(data.dir.y + 15) / 50][(x + 15) / 50] != '1')
+        data.dir.x = x;
+    else if (data.map[(y + 17) / 50][(data.dir.x + 17) / 50] != '1'
+            && data.map[(y + 15) / 50][(data.dir.x + 15) / 50] != '1')
+        data.dir.y = y;
+}
+
 void    render_game()
 {
 	if (cnt == 10)
 	{
 		// usleep(20000);
-		cnt = 0;        
+		cnt = 0;
 		if (data.keys[data.intro.g_k[1]] && !data.keys[data.intro.g_k[9]] && (!data.fov.jumping && data.dir.ph >= 0.5))
+			data.c += 3 * (!!((data.mv / 5) % 2) - !((data.mv / 5) % 2)),
+			data.g_mv -= 3 * (!!((data.mv / 5) % 2) - !((data.mv++ / 5) % 2)),
 			up();
 		if (data.keys[data.intro.g_k[2]] && !data.keys[data.intro.g_k[9]])
+			data.c += 3 * (!!((data.mv / 5) % 2) - !((data.mv / 5) % 2)),
+			data.g_mv -= 3 * (!!((data.mv / 5) % 2) - !((data.mv++ / 5) % 2)),
 			down();
-		
+		if (data.keys[data.intro.g_k[8]] && data.aim < 8)
+		{
+			data.aim++;
+			zoom(data.aim);
+		}
+		else if (!data.keys[data.intro.g_k[8]] && data.aim > 0)
+		{
+			zoom(-data.aim);
+			data.aim--;
+		}
+		if (data.objects.w == 4 && data.use_gun++ > 100)
+		{
+			data.gun[data.objects.w].frame++;
+			if (data.gun[data.objects.w].frame < data.gun[data.objects.w].f_reload)
+				data.gun[data.objects.w].frame = data.gun[data.objects.w].f_reload;
+			if (data.gun[data.objects.w].frame == 51)
+				data.gun[data.objects.w].frame = 0,
+				data.use_gun = 0;
+		}
+		else if (data.objects.w == 17 && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet) && (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame || !data.gun[data.objects.w].bullet))
+		{
+			data.gun[data.objects.w].frame++;
+			if (!data.gun[data.objects.w].bullet && data.gun[data.objects.w].frame < data.gun[data.objects.w].f_shoot)
+				data.gun[data.objects.w].frame = data.gun[data.objects.w].f_shoot;
+			if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_shoot && data.gun[data.objects.w].bullet)
+				data.gun[data.objects.w].frame = 0,
+				data.gun[data.objects.w].bullet--;
+			if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_reload && !data.gun[data.objects.w].bullet)
+				data.gun[data.objects.w].frame = 0,
+				data.gun[data.objects.w].case_bullet--,
+				data.gun[data.objects.w].bullet = 12;
+    		data.use_gun = 0;
+			if (data.gun[data.objects.w].frame < 2 && data.objects.w == 13 && data.keys[data.intro.g_k[7]] && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet))
+				data.gun[data.objects.w].frame = 2;
+		}
+		else if ((data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet) && (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame || !data.gun[data.objects.w].bullet))
+		{
+			data.gun[data.objects.w].frame++;
+			
+			if (!data.gun[data.objects.w].bullet && data.gun[data.objects.w].frame < data.gun[data.objects.w].f_shoot)
+				data.gun[data.objects.w].frame = data.gun[data.objects.w].f_shoot;
+			if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_shoot && data.gun[data.objects.w].bullet)
+				data.gun[data.objects.w].frame = 0,
+				data.gun[data.objects.w].bullet--;
+			if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_reload && !data.gun[data.objects.w].bullet)
+				data.gun[data.objects.w].frame = 0,
+				data.gun[data.objects.w].case_bullet--,
+				data.gun[data.objects.w].bullet = 12;
+    		data.use_gun = 0;
+			if (data.gun[data.objects.w].frame < 2 && data.objects.w == 13 && data.keys[data.intro.g_k[7]] && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet))
+				data.gun[data.objects.w].frame = 2;
+		}
+		else if (data.objects.w == 9 && (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame))
+		{
+			data.gun[data.objects.w].frame++;
+			if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_shoot)
+				data.gun[data.objects.w].frame = 0;
+		}
+
 		if (!data.intro.g_k[0])
 		{
 			if (data.keys[UP])
@@ -328,10 +522,13 @@ void    render_game()
 			if (data.keys[RIGHT])
 				right_angle();
 		}
-			
 		if (data.keys[data.intro.g_k[3]])
+			data.c += 3 * (!!((data.mv / 5) % 2) - !((data.mv / 5) % 2)),
+			data.g_mv -= 3 * (!!((data.mv / 5) % 2) - !((data.mv++ / 5) % 2)),
 			left();
 		if (data.keys[data.intro.g_k[4]])
+			data.c += 3 * (!!((data.mv / 5) % 2) - !((data.mv / 5) % 2)),
+			data.g_mv -= 3 * (!!((data.mv / 5) % 2) - !((data.mv++ / 5) % 2)),
 			right();
 		if (data.fov.jumping && data.dir.ph > 0.2)
 			data.speed = -1,
@@ -348,30 +545,56 @@ void    render_game()
 			data.dir.ph += 0.07,
 			up();
 
-		if (!data.keys[data.intro.g_k[2]] && data.keys[data.intro.g_k[9]] && abs(data.c) < 10 && (!data.fov.jumping && data.dir.ph >= 0.5))
+		if (!data.sound.breath && !data.keys[data.intro.g_k[2]] && data.keys[data.intro.g_k[9]] && abs(data.c) < 10 && (!data.fov.jumping && data.dir.ph >= 0.5))
 			c++,
 			data.speed = 3,
 			data.c = (ac++ % 4) * (c % 4 - !(c % 4)),
 			up();
-		else if (!data.keys[data.intro.g_k[2]] && data.keys[data.intro.g_k[9]] && (!data.fov.jumping && data.dir.ph >= 0.5))
+		else if (!data.sound.breath && !data.keys[data.intro.g_k[2]] && data.keys[data.intro.g_k[9]] && (!data.fov.jumping && data.dir.ph >= 0.5))
 			c++,
 			data.speed = 3,
 			data.c += (15 * (data.c < 0) - 15 * (data.c > 0)) * !!(c % 3) + (3 * (data.c > 0) - 3 * (data.c < 0)) * !(c % 3),
 			up();
+
+		if (data.sound.breath && abs(data.c) < 40)
+			c++,
+			data.c = 3.0 / 20.0 * (ac++ % 20) * (c % 20 - !(c % 20));
+		else if (data.sound.breath)
+			c++,
+			data.c += 3.0 / 18.0 * (15 * (data.c < 0) - 15 * (data.c > 0)) * !!(c % 18) + (18 * (data.c > 0) - 18 * (data.c < 0)) * !(c % 18);
 
 		if (data.fov.crouching && data.dir.ph < 0.8)
 			data.dir.ph += 0.05;
 		if (!data.fov.crouching && data.dir.ph > 0.5)
 			data.dir.ph -= 0.05;
 		
+		data.door.is_op = 1;
 		if (data.keys[data.intro.g_k[6]] || data.keys[999 - SCROLL_UP] || data.keys[999 - SCROLL_DOWN] || data.keys[data.intro.g_k[9]] || data.keys[UP] || data.keys[data.intro.g_k[1]] || data.keys[DOWN] || data.keys[data.intro.g_k[2]] || data.keys[LEFT] || data.keys[RIGHT] || data.keys[data.intro.g_k[3]] || data.keys[data.intro.g_k[4]])
 			set_char_to_win(),
 			mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.intro.lt.mlx_img, 0, 0);
 		data.speed = -3 * data.fov.crouching;
+		if (data.door.map[(data.dir.y + 17) / 50][(data.dir.x + 17) / 50] == 'E' && data.objects.health
+			&& data.map[(int)data.dir.y / 50][(int)data.dir.x / 50] == '0'
+			&& (data.map[(int)data.dir.y / 50 - 1][(int)data.dir.x / 50] != data.map[(int)data.dir.y / 50 + 1][(int)data.dir.x / 50]
+			|| data.map[(int)data.dir.y / 50][(int)data.dir.x / 50 - 1] != data.map[(int)data.dir.y / 50][(int)data.dir.x / 50 + 1])
+			&& data.dir.ph >= 0.5)
+			paint_hit_blood(),
+			mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.blood_hit2.mlx_img, 0, 0),
+			data.bld += !(data.light % 5),
+			data.bld = data.bld * (data.bld != 50),
+			data.objects.health -= !(data.light % 5),
+			data.sound.hit = !(data.objects.health % 3);
+
+			if ((!data.keys[data.intro.g_k[9]] || (data.keys[data.intro.g_k[9]] && data.sound.breath)) && data.objects.breath < 100)
+				data.objects.breath += !(data.light % 5);
 	}
-	if (data.keys[ESC])
-		exit(0);
 	cnt++;
+	if (data.door.op > 0 && data.door.is_op)
+		data.door.op -= cnt / 7;
+	if (data.door.op < 45 && !data.door.is_op)
+		data.door.op += cnt / 7;
+	if (!data.mouse.sett2)
+		data.mouse.sett2 = 1;
 }
 
 void    render_map()
@@ -416,6 +639,12 @@ int rendering(void *d)
 		render_intro2();
 	if (data.mode == SETTING)
 		render_setting();
+	if (data.mode == SETTING2)
+		render_setting2();
+	if (data.mode == ANIMATE_SETT2_IN)
+		animate_sett_in();
+	if (data.mode == ANIMATE_SETT2_OUT)
+		animate_sett_out();
 	if (data.mode == S_CONTROL)
 		render_control();
 	if (data.mode == G_MAP)

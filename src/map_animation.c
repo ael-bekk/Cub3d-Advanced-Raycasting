@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:48:06 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/08/14 21:06:07 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/08/25 16:58:53 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,32 @@ int get_minimap_color2(int x, int y)
         y = (double)data.dir.y - fabs(MY - ynew) * 2 - 16.5;
     else
         y = (double)data.dir.y + fabs(MY - ynew) * 2 - 16.5;
-    if (x <= 0 || y <= 0 || y / 50 >= ft_strlen2(data.map) || x / 50 >= ft_strlen(data.map[y / 50]))
-        return (0);
-    if (data.map[y / 50][x / 50] == '1')
-        return (*(int *)(data.mlx.wall.addr + ((y % 50) * data.mlx.wall.line_len + (x % 50) * (data.mlx.wall.bpp / 8))));
-    return (0);
+    if (x <= 0 || y <= 0 || y / 50 >= data.h_map || x / 50 >= data.w_map[y / 50])
+        return (0xff000000);
+    switch (data.door.map[y / 50][x / 50])
+    {
+        case '1':
+            return (*(int *)(data.assets.addr + (((int)(y * 64.0 / 50.0) % 64 + FLOOR2_START__Y) * data.assets.line_len + ((int)(x * 64.0 / 50.0) % 64 + FLOOR2_START__X) * (data.assets.bpp / 8))));
+        case 'A':
+            return (0x36454F);
+        case 'B':
+            return (0x231A1A);
+        case 'C':
+            return (0x645F5F);
+        case 'D':
+            return (0x393801);
+        case 'E':
+            if (data.map[(int)y / 50][(int)x / 50] == '0' && (data.map[(int)y / 50 - 1][(int)x / 50] != data.map[(int)y / 50 + 1][(int)x / 50] || data.map[(int)y / 50][(int)x / 50 - 1] != data.map[(int)y / 50][(int)x / 50 + 1]))
+                return (*(int *)(data.assets.addr + (((int)(y * 64.0 / 50.0 + data.light) % 64 + 576) * data.assets.line_len + ((int)(x * 64.0 / 50.0 + data.light) % 64 + 1680) * (data.assets.bpp / 8))));
+            else
+                return (*(int *)(data.assets.addr + (((int)(y * 64.0 / 50.0 + data.light) % 64 + 648) * data.assets.line_len + ((int)(x * 64.0 / 50.0 + data.light) % 64 + 1680) * (data.assets.bpp / 8))));
+        case 'F':
+            return (0xB2BEB5);
+        case 'G':
+            return (0xE5E4E2);
+        default:
+            return (0xff000000);
+    }
 }
 
 void    map_1(t_img img, int r)
@@ -74,7 +95,6 @@ void    map_1(t_img img, int r)
     mlx_destroy_image(data.mlx.mlx_ptr, img.mlx_img);
 }
 
-int oo;
 int r;
 
 void    *tmp(void *d)
@@ -104,7 +124,6 @@ void    *tmp(void *d)
             else
                 img_pix_put(img, i - 1345 + 113 + r, j - 935 + 115 + r, 0xff000000);
     }
-    oo = 1;
     return (0);
 }
 
@@ -117,7 +136,6 @@ void    map_2(t_img img, int r, pthread_t p)
 
     img.mlx_img = mlx_new_image(data.mlx.mlx_ptr, (121 + r) * 2, (121 + r) * 2);
     img.addr = mlx_get_data_addr(img.mlx_img, &img.bpp, &img.line_len, &img.endian);
-    oo = 0;
     pthread_create(&p, NULL, &tmp, &img);
     usleep(100);
     x = 280 + r;
@@ -139,8 +157,7 @@ void    map_2(t_img img, int r, pthread_t p)
             else
                 img_pix_put(&img, i - 1345 + 113 + r, j - 935 + 115 + r, 0xff000000);
     }
-    while (!oo)
-        ;
+    pthread_join(p, NULL);
     if (data.intro.map < 26)
     {
         mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, img.mlx_img, RES_X - 121 * 2 - 40 - 24 * data.intro.map, RES_Y - 121 * 2 - 25 - 15 * data.intro.map);

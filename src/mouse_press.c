@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 14:40:53 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/08/14 20:32:48 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/02 16:25:38 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,17 @@ void    mouse_press_setting(int key, int x, int y)
             if (x >= (RES_X - data.intro.sett.x) / 2 && y >= (RES_Y - data.intro.sett.y) / 2 - RES_Y / 12 && x < (RES_X + data.intro.sett.x) / 2 && y < (RES_Y + data.intro.sett.y) / 2 - RES_Y / 12)
                 data.mouse.on_clk[1] = 1;
             if (x >= (RES_X - data.intro.exit.x) / 2 && y >= (RES_Y - data.intro.exit.y) / 2 && x < (RES_X + data.intro.exit.x) / 2 && y < (RES_Y + data.intro.exit.y) / 2)
+                data.mouse.on_clk[2] = 1;
+        }
+        if (data.mode == SETTING2)
+        {
+            if (x >= (RES_X - data.intro.cont.x) / 2 && y >= (RES_Y - data.intro.cont.y) / 2 - RES_Y / 6 && x < (RES_X + data.intro.cont.x) / 2 && y < (RES_Y + data.intro.cont.y) / 2 - RES_Y / 6)
+                data.mouse.on_clk[3] = 1;
+            if (x >= (RES_X - data.intro.restart.x) / 2 && y >= (RES_Y - data.intro.restart.y) / 2 - RES_Y / 12 && x < (RES_X + data.intro.restart.x) / 2 && y < (RES_Y + data.intro.restart.y) / 2 - RES_Y / 12)
+                data.mouse.on_clk[4] = 1;
+            if (x >= (RES_X - data.intro.sett.x) / 2 && y >= (RES_Y - data.intro.sett.y) / 2 && x < (RES_X + data.intro.sett.x) / 2 && y < (RES_Y + data.intro.sett.y) / 2)
+                data.mouse.on_clk[1] = 1;
+            if (x >= (RES_X - data.intro.exit.x) / 2 && y >= (RES_Y - data.intro.exit.y) / 2 + RES_Y / 12 && x < (RES_X + data.intro.exit.x) / 2 && y < (RES_Y + data.intro.exit.y) / 2 + RES_Y / 12)
                 data.mouse.on_clk[2] = 1;
         }
         if (data.mode == S_CONTROL)
@@ -134,17 +145,26 @@ void    mouse_press_control(int key, int x, int y)
 void    mouse_press_game(int key)
 {
     if (key == SCROLL_UP)
-        data.objects.w++;    
+        data.objects.w++,
+        data.sound.scroll = 1;
     if (key == SCROLL_DOWN)
-        data.objects.w--;
+        data.objects.w--,
+        data.sound.scroll = 1;
     if (data.objects.w < 0)
-        data.objects.w = 6;
-    if (data.objects.w > 6)
+        data.objects.w = 26;
+    if (data.objects.w > 26)
         data.objects.w = 0;
     if (key == SCROLL_UP)
         data.keys[1000 - SCROLL_UP - 1] = 1;
     if (key == SCROLL_DOWN)
         data.keys[1000 - SCROLL_DOWN - 1] = 1;
+    if (data.intro.g_k[7] == M_LEFT_CLICK && key == LEFT_CLICK)
+        data.keys[data.intro.g_k[7]] = 1;
+    if (data.intro.g_k[8] == M_RIGHT_CLICK && key == RIGHT_CLICK)
+        data.keys[data.intro.g_k[8]] = 1;
+    if (data.intro.g_k[7] == M_LEFT_CLICK && key == LEFT_CLICK && data.use_gun > 100)
+        data.use_gun = 0,
+        data.gun[data.objects.w].frame = 0;
 }
 
 int mouse_press(int key, int x, int y, void *w)
@@ -152,7 +172,7 @@ int mouse_press(int key, int x, int y, void *w)
     w = NULL;
     if (data.mode == INTRO)
         mouse_press_intro(key);
-    if (data.mode == SETTING)
+    if (data.mode == SETTING || data.mode == SETTING2)
         mouse_press_setting(key, x, y);
     if (data.mode == S_CONTROL)
         mouse_press_control(key, x, y);
