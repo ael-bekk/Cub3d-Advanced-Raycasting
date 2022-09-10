@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 15:16:54 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/09 18:54:10 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/10 18:09:50 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void    set_rays()
         cord[0] = data.dir.x + 17;
         cord[1] = data.dir.y + 17;
         data.indx = i;
+        
         variant_calculate_d(cord, 45, i);
         variant_calculate_d(cord, 20, i);
         variant_calculate_d(cord, 10, i);
@@ -136,11 +137,40 @@ void    set_rays()
         data.light = 0;
 }
 
+void    paint_img3(t_img *img, t_img *img2)
+{
+    int x;
+    int y;
+
+    y = -1;
+    while (++y < RES_Y - data.aim * 12)
+    {
+        x = -1;
+        while (++x < RES_X - data.aim * 16)
+                img_pix_put(img, x, y, get_img_color(img2, x + data.aim * 16, y + data.aim * 12));
+    }
+    y = -1;
+    while (++y < RES_Y)
+    {
+        x = -1;
+        while (++x < RES_X)
+                img_pix_put(img2, x, y, get_img_color(img, ((RES_X - data.aim * 32) * x) / RES_X, ((RES_Y - data.aim * 24) * y) / RES_Y));
+    }
+}
+
 void    set_char_to_win()
 {
     mlx_clear_window(data.mlx.mlx_ptr, data.mlx.win_ptr);
+    // pthread_t t;
+
+    // pthread_create(&t, NULL, &set_rays2, NUL);
+    // usleep(100);
     set_rays();
+    // pthread_join(p, NULL);
+    if (data.aim)
+        paint_img3(&data.img2, &data.img);
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.img.mlx_img, 0, 0);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.img3.mlx_img, (RES_X / 3) * 2, 0);
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.mlx.player, MX, MY);
 
 
@@ -415,7 +445,11 @@ void    set_minimap()
 
     data.img.mlx_img = mlx_new_image(data.mlx.mlx_ptr, RES_X, RES_Y);
     data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
-
+    data.img2.mlx_img = mlx_new_image(data.mlx.mlx_ptr, RES_X, RES_Y);
+    data.img2.addr = mlx_get_data_addr(data.img2.mlx_img, &data.img2.bpp, &data.img2.line_len, &data.img2.endian);
+    data.img3.mlx_img = mlx_new_image(data.mlx.mlx_ptr, RES_X / 3, RES_Y);
+    data.img3.addr = mlx_get_data_addr(data.img3.mlx_img, &data.img3.bpp, &data.img3.line_len, &data.img3.endian);
+    
     data.img_c.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/ceill.xpm", &w, &h);
     data.assets.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/textures.xpm", &w, &h);
     data.guns.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/weapons.xpm", &w, &h);
@@ -588,7 +622,7 @@ void    set_minimap()
     data.door.door[0][0].addr = mlx_get_data_addr(data.door.door[0][0].mlx_img, &data.door.door[0][0].bpp, &data.door.door[0][0].line_len, &data.door.door[0][0].endian);
     data.door.door[0][1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/dor1_1.xpm", &w, &h);
     data.door.door[0][1].addr = mlx_get_data_addr(data.door.door[0][1].mlx_img, &data.door.door[0][1].bpp, &data.door.door[0][1].line_len, &data.door.door[0][1].endian);
-
+    
 
     int i;
     i = -1;

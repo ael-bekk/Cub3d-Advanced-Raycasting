@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:32:22 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/09 17:49:25 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/09 18:59:03 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -412,32 +412,6 @@ void	paint_hit_blood()
 	}
 }
 
-void    zoom(int v)
-{
-    int x;
-    int y;
-
-    x = round(data.dir.x + v * data.angles.pl_cos);
-    y = round(data.dir.y + v * data.angles.pl_sin);
-
-    if (data.map[(y + 17) / 50][(x + 17) / 50] != '1'
-        && data.map[(y + 17) / 50][(data.dir.x + 17) / 50] != '1'
-        && data.map[(data.dir.y + 17) / 50][(x + 17) / 50] != '1'
-        && data.map[(y + 15) / 50][(x + 15) / 50] != '1'
-        && data.map[(y + 15) / 50][(data.dir.x + 15) / 50] != '1'
-        && data.map[(data.dir.y + 15) / 50][(x + 15) / 50] != '1')
-    {
-        data.dir.x = x;
-        data.dir.y = y;
-    }
-    else if (data.map[(data.dir.y + 17) / 50][(x + 17) / 50] != '1'
-            && data.map[(data.dir.y + 15) / 50][(x + 15) / 50] != '1')
-        data.dir.x = x;
-    else if (data.map[(y + 17) / 50][(data.dir.x + 17) / 50] != '1'
-            && data.map[(y + 15) / 50][(data.dir.x + 15) / 50] != '1')
-        data.dir.y = y;
-}
-
 void    render_game()
 {
 	if (cnt == 10)
@@ -457,7 +431,6 @@ void    render_game()
 			if (data.objects.w == 17)
 				data.gun[data.objects.w].frame = 53 + data.aim;
 			data.aim++;
-			zoom(data.aim);
 		}
 		else if ((!data.keys[data.intro.g_k[8]] || !data.gun[data.objects.w].bullet) && data.aim > 0)
 		{
@@ -465,7 +438,6 @@ void    render_game()
 				data.gun[data.objects.w].frame = 53 + data.aim;
 			if (data.objects.w == 17 && data.aim == 1)
 				data.gun[data.objects.w].frame = 15;
-			zoom(-data.aim);
 			data.aim--;
 		}
 		if (data.objects.w == 4 && data.use_gun++ > 100)

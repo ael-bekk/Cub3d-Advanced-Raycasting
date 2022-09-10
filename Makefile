@@ -14,7 +14,7 @@ all:	$(NAME) $(SRCS)
 
 $(NAME): $(SRCS)
 	make -C lib
-	$(FLGS)  -lmlx -framework OpenGL -framework AppKit -Ofast -g3 -flto -march=native  -O3 -ffast-math -msse4.2 -mtune=intel lib/libmlx.a $(SRCS) -o $(NAME)
+	$(FLGS)  -lmlx -framework OpenGL -framework AppKit -Ofast -g3 -flto -march=native -O3 -ffast-math -msse4.2 -mtune=intel lib/libmlx.a $(SRCS) -o $(NAME)
 
 clean: 
 	$(RM) -fr $(NAME)

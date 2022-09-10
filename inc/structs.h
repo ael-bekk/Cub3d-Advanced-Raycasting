@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 12:01:01 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/08 22:33:13 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/10 16:05:18 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,8 @@ typedef struct s_data
 	t_rgb		ceil;
 	t_dir		dir;
 	t_img		img;
+	t_img		img2;
+	t_img		img3;
 	t_img		blood_hit;
 	t_img		blood_hit2;
 	t_p_objects objects;
