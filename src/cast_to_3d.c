@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 22:09:00 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/10 18:25:14 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 13:41:03 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,40 +18,30 @@ void	img_pix_put(t_img *img, int x, int y, int color)
 
     pixel = img->addr + (y * img->line_len + x * (img->bpp / 8));
 	*(int *)pixel = color;
-}
-
-void    before()
-{
-    int i;
-    int j;
-    t_img img;
-
-    img.mlx_img = mlx_new_image(data.mlx.mlx_ptr, 300, 300);
-    img.addr = mlx_get_data_addr(img.mlx_img, &img.bpp, &img.line_len, &img.endian);
-    i = RES_X - 300;
-    while (++i < RES_X)
-    {
-        j = RES_Y - 300;
-        while (++j < RES_Y)
-            if (pow(X - i + 45, 2) + pow(Y - j + 40, 2) - 120 * 120 <= 0)
-                img_pix_put(&img, i - RES_X + 300, j - RES_Y + 300, 0xff000000);
-    }
-    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, img.mlx_img, RES_X - 300, RES_Y - 300);
-}
+} 
 
 int get_weapon_color(int x, int y)
 {
-    return (*(int *)(data.guns.addr + (((int)(round((double)(y) * (256.0 / 200.0))) + 256 * (data.objects.w / 9)) * data.guns.line_len + ((int)round((double)(x) * (256.0 / 200.0)) + 256 * (data.objects.w % 9)) * (data.guns.bpp / 8))));
+    t_img *p;
+
+    p = &(data.guns);
+    return (*(int *)(p->addr + (((int)(round((double)(y) * (256.0 / 200.0))) + 256 * (data.objects.w / 9)) * p->line_len + ((int)round((double)(x) * (256.0 / 200.0)) + 256 * (data.objects.w % 9)) * (p->bpp / 8))));
 }
 
 int get_gun_color(int x, int y)
 {
+    int w;
     int color;
+    t_img *p;
 
-    if (data.objects.w == 9 || data.objects.w == 4  || data.objects.w == 5 || data.objects.w == 2 || data.objects.w == 17 || data.objects.w == 19 || data.objects.w == 13 || data.objects.w == 15 || data.objects.w == 20)
+    x = (double)x * (double)(500.0 / RES_X);
+    y = (double)y * (double)(400.0 / RES_Y);
+    w = data.objects.w;
+    if (w == 9 || w == 4  || w == 5 || w == 2 || w == 17 || w == 19 || w == 13 || w == 15 || w == 20)
     {
-        color = (*(int *)(data.gun[data.objects.w].gun[data.gun[data.objects.w].frame].addr + (y * data.gun[data.objects.w].gun[data.gun[data.objects.w].frame].line_len + x * (data.gun[data.objects.w].gun[data.gun[data.objects.w].frame].bpp / 8))));
-        if (color == 0x00ffff || (data.objects.w == 17 && (color / 256) % 256 >= 150))
+        p = &(data.gun[w].gun[data.gun[w].frame]);
+        color = (*(int *)(p->addr + (y * p->line_len + x * (p->bpp / 8))));
+        if (color == 0x00ffff || (w == 17 && (color / 256) % 256 >= 150))
             return (0xff000000);
         return (color);
     }
@@ -89,8 +79,9 @@ int get_minimap_color(int x, int y)
     
     double xnew = x * c - y * s + 1345;
     double ynew = x * s + y * c + 935;
-    
-    
+    t_img   *p;
+
+    p = &(data.assets);
     if (xnew < MX)
         x = (double)data.dir.x - fabs(MX - xnew) * 2 - 16.5;
     else
@@ -104,7 +95,7 @@ int get_minimap_color(int x, int y)
     switch (data.door.map[y / 50][x / 50])
     {
         case '1':
-            return (*(int *)(data.assets.addr + (((int)(y * 64.0 / 50.0) % 64 + FLOOR2_START__Y) * data.assets.line_len + ((int)(x * 64.0 / 50.0) % 64 + FLOOR2_START__X) * (data.assets.bpp / 8))));
+            return (*(int *)(p->addr + (((int)(y * 64.0 / 50.0) % 64 + FLOOR2_START__Y) * p->line_len + ((int)(x * 64.0 / 50.0) % 64 + FLOOR2_START__X) * (p->bpp / 8))));
         case 'A':
             return (0x36454F);
         case 'B':
@@ -115,9 +106,9 @@ int get_minimap_color(int x, int y)
             return (0x393801);
         case 'E':
             if (data.map[(int)y / 50][(int)x / 50] == '0' && (data.map[(int)y / 50 - 1][(int)x / 50] != data.map[(int)y / 50 + 1][(int)x / 50] || data.map[(int)y / 50][(int)x / 50 - 1] != data.map[(int)y / 50][(int)x / 50 + 1]))
-                return (*(int *)(data.assets.addr + (((int)(y * 64.0 / 50.0 + data.light) % 64 + 576) * data.assets.line_len + ((int)(x * 64.0 / 50.0 + data.light) % 64 + 1680) * (data.assets.bpp / 8))));
+                return (*(int *)(p->addr + (((int)(y * 64.0 / 50.0 + data.light) % 64 + 576) * p->line_len + ((int)(x * 64.0 / 50.0 + data.light) % 64 + 1680) * (p->bpp / 8))));
             else
-                return (*(int *)(data.assets.addr + (((int)(y * 64.0 / 50.0 + data.light) % 64 + 648) * data.assets.line_len + ((int)(x * 64.0 / 50.0 + data.light) % 64 + 1680) * (data.assets.bpp / 8))));
+                return (*(int *)(p->addr + (((int)(y * 64.0 / 50.0 + data.light) % 64 + 648) * p->line_len + ((int)(x * 64.0 / 50.0 + data.light) % 64 + 1680) * (p->bpp / 8))));
         case 'F':
             return (0xB2BEB5);
         case 'G':
@@ -185,17 +176,17 @@ void    cast_to_3d_for_door(int i)
     int forward2;
     unsigned int color;
 
-    if (!data.door.rays[i])
-        data.door.rays[i] = 1;
-    data.door.rays[i] = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / data.door.rays[i]);
-    forward = (RES_Y / 2 - data.door.rays[i] * data.dir.ph)  - data.c;
+    if (!data.door.rays)
+        data.door.rays = 1;
+    data.door.rays = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / data.door.rays);
+    forward = (RES_Y / 2 - data.door.rays * data.dir.ph)  - data.c;
     forward2 = forward;
     if (forward < 0)
         forward = 0;
     if (forward > RES_Y)
         forward = RES_Y;
     j = forward;
-    while ((int)(64 / data.door.rays[i] * (j - forward2)) < 64 && j < RES_Y)
+    while ((int)(64 / data.door.rays * (j - forward2)) < 64 && j < RES_Y)
     {
         if (i >= (RES_X / 3) * 2)
             put_clob_tex_object(j, i - (RES_X / 3) * 2);
@@ -204,7 +195,7 @@ void    cast_to_3d_for_door(int i)
             img_pix_put(&data.img, i, j , color);
         else
         {
-            color = set_design(3, i, (int)(64 / data.door.rays[i] * ((j - forward2))) % 64, data.design);
+            color = set_design(3, i, (int)(64 / data.door.rays * ((j - forward2))) % 64, data.design);
             if (color < 0xff000000)
                 img_pix_put(&data.img, i, j, color);
         }
@@ -219,10 +210,10 @@ void    cast_to_3d(int i)
     int forward2;
     unsigned int color;
 
-    if (!data.rays[i])
-        data.rays[i] = 1;
-    data.rays[i] = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / data.rays[i]);
-    forward = (RES_Y / 2 - data.rays[i] * data.dir.ph) - data.c;
+    if (!data.rays)
+        data.rays = 1;
+    data.rays = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / data.rays);
+    forward = (RES_Y / 2 - data.rays * data.dir.ph) - data.c;
     forward2 = forward;
     if (forward < 0)
         forward = 0;
@@ -242,7 +233,7 @@ void    cast_to_3d(int i)
         j++;
     }
 
-    while ((int)(64 / data.rays[i] * (j - forward2)) < 64 && j < RES_Y)
+    while ((int)(64 / data.rays * (j - forward2)) < 64 && j < RES_Y)
     {
         if (i >= (RES_X / 3) * 2)
             put_clob_tex_object(j, i - (RES_X / 3) * 2);
@@ -250,7 +241,7 @@ void    cast_to_3d(int i)
         if (j > data.g_mv && i < 1500  && color != 0xff000000 && color != 0x00ffff)
             img_pix_put(&data.img, i, j, color);
         else
-            img_pix_put(&data.img, i, j, set_design(3, i, (int)(64 / data.rays[i] * (j - forward2)) % 64, data.design));
+            img_pix_put(&data.img, i, j, set_design(3, i, (int)(64 / data.rays * (j - forward2)) % 64, data.design));
         j++;
     }
     
@@ -266,7 +257,7 @@ void    cast_to_3d(int i)
         j++;
     }
     data.door.dor = 1;
-    if (data.color[data.indx][0])
+    if (data.color[0])
         cast_to_3d_for_door(i);
     points_put(RES_X - 142 + 60, 55);
     points_put(RES_X - 142 + 60, 65);

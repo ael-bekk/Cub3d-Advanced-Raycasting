@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 11:52:40 by mel-hada          #+#    #+#             */
-/*   Updated: 2022/09/09 16:04:36 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:27:58 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,9 @@ void init_args(t_map **map)
     init_guns_objects();
     data.mv = 0;
     data.g_mv = 0;
+    data.zoom = 0;
+    data.mv_x = 0;
+    data.mv_y = 0;
     init_keys();
     *map = NULL;
 }

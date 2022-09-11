@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 21:37:37 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/02 14:20:54 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:41:40 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,17 +111,25 @@ void    mouse_release_game(int key)
         data.keys[data.intro.g_k[8]] = 0;
 }
 
+void    mouse_release_map(int key)
+{
+    if (data.intro.g_k[7] == M_LEFT_CLICK && key == LEFT_CLICK)
+        data.keys[data.intro.g_k[7]] = 0;
+}
+
 int mouse_release(int key, int x, int y, void *w)
 {
 
     w = NULL;
     if (data.mode == INTRO)
         mouse_release_intro(key);
-    if (data.mode == SETTING || data.mode == SETTING2)
+    else if (data.mode == SETTING || data.mode == SETTING2)
         mouse_release_setting(key, x, y);
-    if (data.mode == S_CONTROL)
+    else if (data.mode == S_CONTROL)
         mouse_release_control(key, x, y);
-    if (data.mode == GAME)
+    else if (data.mode == G_MAP)
+        mouse_release_map(key);
+    else if (data.mode == GAME)
         mouse_release_game(key);
     return (0);
 }

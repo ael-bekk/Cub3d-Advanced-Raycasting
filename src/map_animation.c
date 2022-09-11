@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:48:06 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/08/25 16:58:53 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:50:50 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,9 +114,9 @@ void    *tmp(void *d)
         j = 935 - 116 - r;
         while (++j < 935 + 127 + r)
             if ((X - i + 45)*(X - i + 45) + (Y - j + 40)*(Y - j + 40) - 215 * 215 <= 0)
-                img_pix_put(img, i - 1345 + 113 + r, j - 935 + 115 + r, get_minimap_color2(i, j));
+                img_pix_put(img, i - 1345 + 113 + r, j - 935 + 115 + r, get_minimap_color2(i - data.mv_x, j - data.mv_y));
             else if (i > X + 45 - x / 2 && j > Y + 40 - y / 2 && i < X + 45 + x / 2 && j < Y + 40 + y / 2)
-                img_pix_put(img, i - 1345 + 113 + r, j - 935 + 115 + r, get_minimap_color2(i, j));
+                img_pix_put(img, i - 1345 + 113 + r, j - 935 + 115 + r, get_minimap_color2(i - data.mv_x, j - data.mv_y));
             else if ((X - i + 45)*(X - i + 45) + (Y - j  + 40)*(Y - j + 40) - 220 * 220 <= 0)
                 img_pix_put(img, i - 1345 + 113 + r, j - 935 + 115 + r, 0xffffff);
             else if (i > X + 45 - x / 2 - 5 && j > Y + 40 - y / 2 - 5 && i < X + 45 + x / 2 + 5 && j < Y + 40 + y / 2 + 5)
@@ -141,15 +141,14 @@ void    map_2(t_img img, int r, pthread_t p)
     x = 280 + r;
     y = 100 + (2 * r) / 3;
     i = 1345 - 1;
-    
     while (++i < 1345 + 129 + r)
     {
         j = 935 - 116 - r;
         while (++j < 935 + 127 + r)
             if ((X - i + 45)*(X - i + 45) + (Y - j + 40)*(Y - j + 40) - 215 * 215 <= 0)
-                img_pix_put(&img, i - 1345 + 113 + r, j - 935 + 115 + r, get_minimap_color2(i, j));
+                img_pix_put(&img, i - 1345 + 113 + r, j - 935 + 115 + r, get_minimap_color2(i - data.mv_x, j - data.mv_y));
             else if (i > X + 45 - x / 2 && j > Y + 40 - y / 2 && i < X + 45 + x / 2 && j < Y + 40 + y / 2)
-                img_pix_put(&img, i - 1345 + 113 + r, j - 935 + 115 + r, get_minimap_color2(i, j));
+                img_pix_put(&img, i - 1345 + 113 + r, j - 935 + 115 + r, get_minimap_color2(i - data.mv_x, j - data.mv_y));
             else if ((X - i + 45)*(X - i + 45) + (Y - j  + 40)*(Y - j + 40) - 220 * 220 <= 0)
                 img_pix_put(&img, i - 1345 + 113 + r, j - 935 + 115 + r, 0xffffff);
             else if (i > X + 45 - x / 2 - 5 && j > Y + 40 - y / 2 - 5 && i < X + 45 + x / 2 + 5 && j < Y + 40 + y / 2 + 5)
@@ -166,7 +165,8 @@ void    map_2(t_img img, int r, pthread_t p)
     else
     {
         mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, img.mlx_img, RES_X - 121 * 2 - 40 - 24 * 25 - r, RES_Y - 121 * 2 - 25 - 15 * 25 - r);
-        mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.mlx.player, RES_X - 121  - 60 - 24 * 25, RES_Y - 121  - 45 - 15 * 25);
+        if (!data.mv_x && !data.mv_y)
+            mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.mlx.player, RES_X - 121  - 60 - 24 * 25 + data.mv_x, RES_Y - 121  - 45 - 15 * 25 + data.mv_y);
     }
     mlx_destroy_image(data.mlx.mlx_ptr, img.mlx_img);
 }

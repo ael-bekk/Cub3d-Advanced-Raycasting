@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 14:40:53 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/02 16:25:38 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:38:33 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,20 +144,25 @@ void    mouse_press_control(int key, int x, int y)
 
 void    mouse_press_game(int key)
 {
-    if (key == SCROLL_UP)
+    if (key == SCROLL_UP && !data.keys[data.intro.g_k[8]])
         data.objects.w++,
-        data.sound.scroll = 1;
-    if (key == SCROLL_DOWN)
+        data.sound.scroll = 1,
+        data.keys[1000 - SCROLL_UP - 1] = 1;
+    else if (key == SCROLL_UP && data.zoom > 0)
+        data.zoom--;
+    
+    if (!data.keys[data.intro.g_k[8]] && key == SCROLL_DOWN && !data.keys[data.intro.g_k[8]])
         data.objects.w--,
-        data.sound.scroll = 1;
+        data.sound.scroll = 1,
+        data.keys[1000 - SCROLL_DOWN - 1] = 1;
+    else if (key == SCROLL_DOWN && data.zoom < 20)
+        data.zoom++;
+    
     if (data.objects.w < 0)
         data.objects.w = 26;
     if (data.objects.w > 26)
         data.objects.w = 0;
-    if (key == SCROLL_UP)
-        data.keys[1000 - SCROLL_UP - 1] = 1;
-    if (key == SCROLL_DOWN)
-        data.keys[1000 - SCROLL_DOWN - 1] = 1;
+
     if (data.intro.g_k[7] == M_LEFT_CLICK && key == LEFT_CLICK)
         data.keys[data.intro.g_k[7]] = 1;
     if (data.intro.g_k[8] == M_RIGHT_CLICK && key == RIGHT_CLICK)
@@ -167,16 +172,24 @@ void    mouse_press_game(int key)
         data.gun[data.objects.w].frame = 0;
 }
 
+void    mouse_press_map(int key)
+{
+    if (data.intro.g_k[7] == M_LEFT_CLICK && key == LEFT_CLICK)
+        data.keys[data.intro.g_k[7]] = 1;
+}
+
 int mouse_press(int key, int x, int y, void *w)
 {
     w = NULL;
     if (data.mode == INTRO)
         mouse_press_intro(key);
-    if (data.mode == SETTING || data.mode == SETTING2)
+    else if (data.mode == SETTING || data.mode == SETTING2)
         mouse_press_setting(key, x, y);
-    if (data.mode == S_CONTROL)
+    else if (data.mode == S_CONTROL)
         mouse_press_control(key, x, y);
-    if (data.mode == GAME)
+    else if (data.mode == G_MAP)
+        mouse_press_map(key);
+    else if (data.mode == GAME)
         mouse_press_game(key);
     return (0);
 }

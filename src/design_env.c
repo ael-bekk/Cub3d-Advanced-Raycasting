@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 17:02:40 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/09 21:54:04 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 13:42:19 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int    room_a(int side, double x, double y)
         case -1:
             return (*(int *)(data.assets.addr + (((int)round(y * 10.0 * (64.0 / 500.0)) % 64 + SUPPORT_START__Y + v2 * 72) * data.assets.line_len + ((int)round(x * 10.0 * (64.0 / 500.0)) % 64 + SUPPORT_START__X + w2 * 72) * (data.assets.bpp / 8))));
         default:
-            return (*(int *)(data.assets.addr + (((int)y + CART1_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[(int)x][1] * 10.0 * (64.0 / 500.0)) % 64 + CART1_START__X + w3 * 72) * (data.assets.bpp / 8))));
+            return (*(int *)(data.assets.addr + (((int)y + CART1_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[1] * 10.0 * (64.0 / 500.0)) % 64 + CART1_START__X + w3 * 72) * (data.assets.bpp / 8))));
     }
 }
 
@@ -58,7 +58,7 @@ int    room_b(int side, double x, double y)
         case -1:
             return (*(int *)(data.assets.addr + (((int)round(y * 10.0 * (64.0 / 500.0)) % 64 + LIGHT_START__Y + v2 * 72) * data.assets.line_len + ((int)round(x * 10.0 * (64.0 / 500.0)) % 64 + LIGHT_START__X + w2 * 72) * (data.assets.bpp / 8))));
         default:
-            return (*(int *)(data.assets.addr + (((int)y + CART2_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[(int)x][1] * 10.0 * (64.0 / 500.0)) % 64 + CART2_START__X + w3 * 72) * (data.assets.bpp / 8))));
+            return (*(int *)(data.assets.addr + (((int)y + CART2_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[1] * 10.0 * (64.0 / 500.0)) % 64 + CART2_START__X + w3 * 72) * (data.assets.bpp / 8))));
     }
 }
 
@@ -79,8 +79,8 @@ int    room_c(int side, double x, double y)
     if (side == -1)
         return (*(int *)(data.assets.addr + (((int)round(y * 10.0 * (64.0 / 500.0)) % 64 + SUPPORT_P_START__Y + v2 * 72) * data.assets.line_len + ((int)round(x * 10.0 * (64.0 / 500.0)) % 64 + SUPPORT_P_START__X) * (data.assets.bpp / 8))));
     if ((w3 && v3 >= 6) || (!w3 && v3 >= 7))
-        return (*(int *)(data.assets.addr + (((int)y + TECH1_2_START__Y + ((v3 + w3) % 5) * 72) * data.assets.line_len + ((int)round(data.color[(int)x][1] * 10.0 * (64.0 / 500.0)) % 64 + TECH1_2_START__X + 3 * 72) * (data.assets.bpp / 8))));
-    return (*(int *)(data.assets.addr + (((int)y + TECH1_2_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[(int)x][1] * 10.0 * (64.0 / 500.0)) % 64 + TECH1_2_START__X + w3 * 72) * (data.assets.bpp / 8))));
+        return (*(int *)(data.assets.addr + (((int)y + TECH1_2_START__Y + ((v3 + w3) % 5) * 72) * data.assets.line_len + ((int)round(data.color[1] * 10.0 * (64.0 / 500.0)) % 64 + TECH1_2_START__X + 3 * 72) * (data.assets.bpp / 8))));
+    return (*(int *)(data.assets.addr + (((int)y + TECH1_2_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[1] * 10.0 * (64.0 / 500.0)) % 64 + TECH1_2_START__X + w3 * 72) * (data.assets.bpp / 8))));
 }
 
 int    room_d(int side, double x, double y)
@@ -110,7 +110,7 @@ int    room_d(int side, double x, double y)
 	    case -1:
             return (*(int *)(data.assets.addr + (((int)round(y * 10.0 * (64.0 / 500.0)) % 64 + SUPPORT_G_START__Y + v2 * 72) * data.assets.line_len + ((int)round(x * 10.0 * (64.0 / 500.0)) % 64 + SUPPORT_G_START__X + w2 * 72) * (data.assets.bpp / 8))));
         default:
-            return (*(int *)(data.assets.addr + (((int)y + LAB_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[(int)x][1] * 10.0 * (64.0 / 500.0)) % 64 + LAB_START__X + w3 * 72) * (data.assets.bpp / 8))));
+            return (*(int *)(data.assets.addr + (((int)y + LAB_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[1] * 10.0 * (64.0 / 500.0)) % 64 + LAB_START__X + w3 * 72) * (data.assets.bpp / 8))));
     }
 }
 
@@ -138,7 +138,7 @@ int    room_e(int side, double x, double y)
         return (*(int *)(data.assets.addr + (((int)round(y * 10.0 * (64.0 / 500.0)) % 64 + PIPES_START__Y) * data.assets.line_len + ((int)round(x * 10.0 * (64.0 / 500.0)) % 64 + PIPES_START__X ) * (data.assets.bpp / 8))));
     if (side == -1)
         return (*(int *)(data.assets.addr + (((int)round(y * 10.0 * (64.0 / 500.0)) % 64 + SUPPORT_F_START__Y + v2 * 72) * data.assets.line_len + ((int)round(x * 10.0 * (64.0 / 500.0)) % 64 + SUPPORT_F_START__X + w2 * 72) * (data.assets.bpp / 8))));
-    return (*(int *)(data.assets.addr + (((int)y + LAB_B_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[(int)x][1] * 10.0 * (64.0 / 500.0)) % 64 + LAB_B_START__X + w3 * 72) * (data.assets.bpp / 8))));
+    return (*(int *)(data.assets.addr + (((int)y + LAB_B_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[1] * 10.0 * (64.0 / 500.0)) % 64 + LAB_B_START__X + w3 * 72) * (data.assets.bpp / 8))));
 }
 
 int    room_f(int side, double x, double y)
@@ -158,12 +158,12 @@ int    room_f(int side, double x, double y)
     if (side == -1)
         return (*(int *)(data.assets.addr + (((int)round(y * 10.0 * (64.0 / 500.0)) % 64 + SUPPORT_PP_START__Y + v2 * 72) * data.assets.line_len + ((int)round(x * 10.0 * (64.0 / 500.0)) % 64 + SUPPORT_PP_START__X) * (data.assets.bpp / 8))));
     if ((w3 == 3 && v3 > 1) || (!w3 && v3 > 4))
-        return (*(int *)(data.assets.addr + (((int)y + TECH3_START__Y + ((v3 + w3) % 2) * 72) * data.assets.line_len + ((int)round(data.color[(int)x][1] * 10.0 * (64.0 / 500.0)) % 64 + TECH3_START__X + 3 * 72) * (data.assets.bpp / 8))));
+        return (*(int *)(data.assets.addr + (((int)y + TECH3_START__Y + ((v3 + w3) % 2) * 72) * data.assets.line_len + ((int)round(data.color[1] * 10.0 * (64.0 / 500.0)) % 64 + TECH3_START__X + 3 * 72) * (data.assets.bpp / 8))));
     if (w3 == 4 && v3 < 2)
-        return (*(int *)(data.assets.addr + (((int)y + TECH3_START__Y + ((v3 + w3) % 2) * 72) * data.assets.line_len + ((int)round(data.color[(int)x][1] * 10.0 * (64.0 / 500.0)) % 64 + TECH3_START__X + 8 * 72) * (data.assets.bpp / 8))));
+        return (*(int *)(data.assets.addr + (((int)y + TECH3_START__Y + ((v3 + w3) % 2) * 72) * data.assets.line_len + ((int)round(data.color[1] * 10.0 * (64.0 / 500.0)) % 64 + TECH3_START__X + 8 * 72) * (data.assets.bpp / 8))));
     if (w3 == 4)
-        return (*(int *)(data.assets.addr + (((int)y + TECH3_START__Y + ((v3 + data.light / 30 + ((v3 + data.light / 30) % 4 == 2)) % 4) * 72) * data.assets.line_len + ((int)round(data.color[(int)x][1] * 10.0 * (64.0 / 500.0)) % 64 + TECH3_START__X + 12 * 72) * (data.assets.bpp / 8))));
-    return (*(int *)(data.assets.addr + (((int)y + TECH3_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[(int)x][1] * 10.0 * (64.0 / 500.0)) % 64 + TECH3_START__X + w3 * 72) * (data.assets.bpp / 8))));
+        return (*(int *)(data.assets.addr + (((int)y + TECH3_START__Y + ((v3 + data.light / 30 + ((v3 + data.light / 30) % 4 == 2)) % 4) * 72) * data.assets.line_len + ((int)round(data.color[1] * 10.0 * (64.0 / 500.0)) % 64 + TECH3_START__X + 12 * 72) * (data.assets.bpp / 8))));
+    return (*(int *)(data.assets.addr + (((int)y + TECH3_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[1] * 10.0 * (64.0 / 500.0)) % 64 + TECH3_START__X + w3 * 72) * (data.assets.bpp / 8))));
 }
 
 int    room_g(int side, double x, double y)
@@ -180,7 +180,7 @@ int    room_g(int side, double x, double y)
         case -1:
             return (*(int *)(data.img_c.addr + (((int)(y / 4 + data.light / 2 + data.light) % 500 + 500) % 500 * data.img_c.line_len + ((int)(x / 4 + data.light) % 500 + 500) % 500 * (data.img_c.bpp / 8))));
         default:
-            return (*(int *)(data.assets.addr + (((int)y + SZ_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[(int)x][1] * 10.0 * (64.0 / 500.0)) % 64 + SZ_START__X + w3 * 72) * (data.assets.bpp / 8))));    
+            return (*(int *)(data.assets.addr + (((int)y + SZ_START__Y + v3 * 72) * data.assets.line_len + ((int)round(data.color[1] * 10.0 * (64.0 / 500.0)) % 64 + SZ_START__X + w3 * 72) * (data.assets.bpp / 8))));    
     }
 }
 
@@ -191,16 +191,16 @@ int    set_design(int side, double x, double y, char design)
 
     door = (side != 3 && y >= 0 && x >= 0 && y / 50 < data.h_map && x / 50 < data.w_map[(int)y / 50] && data.map[(int)y / 50][(int)x / 50] == 'H' && data.door.c)
             || (side == 3 && data.door.hit_wall);
-    if (data.door.dor && data.color[data.indx][0] && side == 3)
+    if (data.door.dor && data.color[0] && side == 3)
     {
         int l = fabs(data.door.cord[0] - data.dir.x - 17) <= 150 && fabs(data.door.cord[1] - data.dir.y - 17) <= 150;
-        if (((int)round(data.door.color[(int)x][1] * 10.0 * (64.0 / 500.0)) % 64) - data.door.op * l >= 0)
+        if (((int)round(data.door.color[1] * 10.0 * (64.0 / 500.0)) % 64) - data.door.op * l >= 0)
         {
-            d = *(unsigned int *)(data.door.door[0][1].addr + ((int)y * data.door.door[0][1].line_len + ((int)round(data.door.color[(int)x][1] * 10.0 * (64.0 / 500.0) - data.door.op * l) % 64) * (data.door.door[0][1].bpp / 8)));
+            d = *(unsigned int *)(data.door.door[0][1].addr + ((int)y * data.door.door[0][1].line_len + ((int)round(data.door.color[1] * 10.0 * (64.0 / 500.0) - data.door.op * l) % 64) * (data.door.door[0][1].bpp / 8)));
             if ((unsigned int)d < 0xff000000)
                 return (d);
         }
-        d = (int)round(data.door.color[(int)x][1] * 10.0 * (64.0 / 500.0)) % 64;
+        d = (int)round(data.door.color[1] * 10.0 * (64.0 / 500.0)) % 64;
         if (d + data.door.op * l < 64)
             return (*(int *)(data.door.door[0][0].addr + ((int)y * data.door.door[0][0].line_len + (d + data.door.op * l % 64) * (data.door.door[0][0].bpp / 8))));
         return (0xff000000);

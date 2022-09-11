@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:32:22 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/09 18:59:03 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:01:01 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -438,7 +438,10 @@ void    render_game()
 				data.gun[data.objects.w].frame = 53 + data.aim;
 			if (data.objects.w == 17 && data.aim == 1)
 				data.gun[data.objects.w].frame = 15;
-			data.aim--;
+			if (data.zoom > 0)
+				data.zoom--;
+			else
+				data.aim--;
 		}
 		if (data.objects.w == 4 && data.use_gun++ > 100)
 		{

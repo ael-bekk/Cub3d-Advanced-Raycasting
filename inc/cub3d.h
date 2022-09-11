@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/21 12:41:47 by mel-hada          #+#    #+#             */
-/*   Updated: 2022/08/29 12:17:26 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 13:00:44 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,5 +90,6 @@ void    map_appending();
 int     set_design(int side, double x, double y, char design);
 void    init_angles();
 char	*ft_itoa(int n);
-
+void    init_guns();
+void    paint_img(t_img *img, char *path, int res_x, int res_y);
 #endif

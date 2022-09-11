@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:20:15 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/02 14:02:37 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:44:52 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,10 @@ void    key_press_control(int key)
 void    key_press_map(int key)
 {
     if (key == data.intro.g_k[10])
-        data.intro.up = !data.intro.up;
+        data.intro.up = !data.intro.up,
+        data.mv_x = 0,
+        data.mv_y = 0,
+        data.keys[data.intro.g_k[7]] = 0;
 }
 
 void    key_press_game(int key)

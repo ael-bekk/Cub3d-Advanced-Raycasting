@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 12:01:01 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/10 16:05:18 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:27:35 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,11 +178,11 @@ typedef struct s_door
 	int		op;
 	double	cord[2];
 	int		is_op;
-	int		color[15001][2];
+	int		color[2];
 	int		counter;
 	char	**map;
 	t_img	door[8][2];
-	double	rays[15001];
+	double	rays;
 	int		hit_wall;
 	int		c;
 }	t_door;
@@ -192,9 +192,9 @@ typedef struct s_door
 /*************************************************************************/
 typedef struct s_angle
 {
-	double		r_cos[15001];
-	double		r_sin[15001];
-	double		r_res_cos[15001];
+	double		r_cos[1501];
+	double		r_sin[1501];
+	double		r_res_cos[1501];
 	double		cte_tan;
 	double		pl_cos;
 	double		pl_sin;
@@ -212,7 +212,7 @@ typedef struct s_gun
 	int		frame;
 	int		case_bullet;
 	int		bullet;
-	t_img	gun[100];
+	t_img	gun[90];
 }	t_gun;
 
 /*************************************************************************/
@@ -231,8 +231,8 @@ typedef struct s_data
 	int			width;
 	int			c;
 	int			speed;
-	double		rays[15001];
-	int			color[15001][2];
+	double		rays;
+	int			color[2];
 	char		**map;
 	int			*w_map;
 	int			h_map;
@@ -262,6 +262,9 @@ typedef struct s_data
 	t_img		nums[10];
 	int			use_gun;
 	int			aim;
+	int			zoom;
+	int			mv_x;
+	int			mv_y;
 }   t_data;
 
 

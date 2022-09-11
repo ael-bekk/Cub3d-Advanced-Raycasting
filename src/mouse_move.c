@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:24:38 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/06 18:33:05 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 14:45:47 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,16 +166,25 @@ void    mouse_move_game(int x, int y)
         data.mouse.y = y;
 }
 
+void    mouse_move_map(int x, int y)
+{
+    if (data.keys[data.intro.g_k[7]])
+        data.mv_x += x - data.mouse.x,
+        data.mv_y += y - data.mouse.y;
+}
+
 int mouse_move(int x, int y, void *w)
 {
     w = NULL;
         
     if (data.mode == INTRO)
         mouse_move_intro(x, y);
-    if (data.mode == SETTING || data.mode == SETTING2)
+    else if (data.mode == SETTING || data.mode == SETTING2)
         mouse_move_setting(x, y);
-    if (data.mode == S_CONTROL)
+    else if (data.mode == S_CONTROL)
         mouse_move_control(x, y);
+    else if (data.mode == G_MAP)
+        mouse_move_map(x, y);
     if (data.mode == GAME)
         mouse_move_game(x, y);
     else
