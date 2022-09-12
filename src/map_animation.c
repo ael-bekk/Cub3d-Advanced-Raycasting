@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:48:06 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 14:50:50 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/12 12:50:37 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,24 @@ int get_minimap_color2(int x, int y)
     double  c;
     double  s;
 
-    c = cos((data.dir.angle + 90 + 7.2 * (double)data.intro.map * (data.intro.map < 51)) * M_PI / 180);
-    s = sin((data.dir.angle + 90 + 7.2 * (double)data.intro.map * (data.intro.map < 51)) * M_PI / 180);
+    c = cos((data.dir.angle + data.map_rotation + 90 + 7.2 * (double)data.intro.map * (data.intro.map < 51)) * M_PI / 180);
+    s = sin((data.dir.angle + data.map_rotation + 90 + 7.2 * (double)data.intro.map * (data.intro.map < 51)) * M_PI / 180);
+
     x -= 1345;
     y -= 935;
     
     double xnew = x * c - y * s + 1345;
     double ynew = x * s + y * c + 935;
     
-    
     if (xnew < MX)
-        x = (double)data.dir.x - fabs(MX - xnew) * 2 - 16.5;
+        x = (double)data.dir.x - fabs(MX - xnew) * (2 - data.map_zoom) - 16.5;
     else
-        x = (double)data.dir.x + fabs(MX - xnew) * 2 - 16.5;
+        x = (double)data.dir.x + fabs(MX - xnew) * (2 - data.map_zoom) - 16.5;
     if (ynew < MY)
-        y = (double)data.dir.y - fabs(MY - ynew) * 2 - 16.5;
+        y = (double)data.dir.y - fabs(MY - ynew) * (2 - data.map_zoom) - 16.5;
     else
-        y = (double)data.dir.y + fabs(MY - ynew) * 2 - 16.5;
+        y = (double)data.dir.y + fabs(MY - ynew) * (2 - data.map_zoom) - 16.5;
+
     if (x <= 0 || y <= 0 || y / 50 >= data.h_map || x / 50 >= data.w_map[y / 50])
         return (0xff000000);
     switch (data.door.map[y / 50][x / 50])

@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 11:59:21 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 13:37:54 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 19:00:40 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ void    init_guns()
     init_gun(9, 15, path);
 
 	ft_memcpy(path, "img/guns/g3/", 12);
-    init_gun(2, 34, path);
+    init_gun(2, 34, path); 
 
-	ft_memcpy(path, "img/guns/g4/", 12); 
+	ft_memcpy(path, "img/guns/g4/", 12);   
     init_gun(19, 50, path);
 
 	ft_memcpy(path, "img/guns/g5/", 12);

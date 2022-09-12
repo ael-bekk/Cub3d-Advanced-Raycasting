@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:24:38 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 14:45:47 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/12 13:19:54 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,11 +166,60 @@ void    mouse_move_game(int x, int y)
         data.mouse.y = y;
 }
 
+void    inc_get_minimap_color2(int x, int y, int angle)
+{
+    double  c;
+    double  s;
+    double  c1;
+    double  s1;
+
+    c = cos((data.dir.angle + angle + 90 + 7.2 * (double)data.intro.map * (data.intro.map < 51)) * M_PI / 180);
+    s = sin((data.dir.angle + angle + 90 + 7.2 * (double)data.intro.map * (data.intro.map < 51)) * M_PI / 180);
+    c1 = cos((data.dir.angle + 90 + 7.2 * (double)data.intro.map * (data.intro.map < 51)) * M_PI / 180);
+    s1 = sin((data.dir.angle + 90 + 7.2 * (double)data.intro.map * (data.intro.map < 51)) * M_PI / 180);
+
+    x -= 1345;
+    y -= 935;
+    
+    double xnew = x * c - y * s + 1345;
+    double ynew = x * s + y * c + 935;
+    
+    double old_x = x * c1 - y * s1 + 1345;
+    double old_y = x * s1 + y * c1 + 935;
+    
+    if (xnew < MX)
+        x = (double)data.dir.x - fabs(MX - xnew) * (2 - data.map_zoom) - 16.5;
+    else
+        x = (double)data.dir.x + fabs(MX - xnew) * (2 - data.map_zoom) - 16.5;
+    if (ynew < MY)
+        y = (double)data.dir.y - fabs(MY - ynew) * (2 - data.map_zoom) - 16.5;
+    else
+        y = (double)data.dir.y + fabs(MY - ynew) * (2 - data.map_zoom) - 16.5;
+
+    if (old_x < MX)
+        old_x = (double)data.dir.x - fabs(MX - xnew) * (2 - data.map_zoom) - 16.5;
+    else
+        old_x = (double)data.dir.x + fabs(MX - xnew) * (2 - data.map_zoom) - 16.5;
+    if (old_y < MY)
+        old_y = (double)data.dir.y - fabs(MY - ynew) * (2 - data.map_zoom) - 16.5;
+    else
+        old_y = (double)data.dir.y + fabs(MY - ynew) * (2 - data.map_zoom) - 16.5;
+
+    data.mv_x -= (old_x - x) * 7 * cos((data.dir.angle - angle + 90 + 7.2 * (double)data.intro.map * (data.intro.map < 51)) * M_PI / 180);
+    data.mv_y -= (old_y - y) * 7 * sin((data.dir.angle - angle + 90 + 7.2 * (double)data.intro.map * (data.intro.map < 51)) * M_PI / 180);
+}
+
+
 void    mouse_move_map(int x, int y)
 {
     if (data.keys[data.intro.g_k[7]])
-        data.mv_x += x - data.mouse.x,
-        data.mv_y += y - data.mouse.y;
+        data.mv_x += (x - data.mouse.x) * 3,
+        data.mv_y += (y - data.mouse.y) * 3;
+    if (data.keys[data.intro.g_k[8]])
+    {
+        inc_get_minimap_color2(1345, 935, x - data.mouse.x);
+        data.map_rotation += x - data.mouse.x;
+    }
 }
 
 int mouse_move(int x, int y, void *w)

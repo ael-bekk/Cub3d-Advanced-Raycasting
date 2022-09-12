@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 14:40:53 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 14:38:33 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 15:23:55 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,13 @@ void    mouse_press_map(int key)
 {
     if (data.intro.g_k[7] == M_LEFT_CLICK && key == LEFT_CLICK)
         data.keys[data.intro.g_k[7]] = 1;
+    if (data.intro.g_k[8] == M_RIGHT_CLICK && key == RIGHT_CLICK)
+        data.keys[data.intro.g_k[8]] = 1;
+
+    if (key == SCROLL_UP && data.map_zoom > -1.9)
+        data.map_zoom -= 0.1;
+    if (key == SCROLL_DOWN && data.map_zoom < 1.9)
+        data.map_zoom += 0.1;
 }
 
 int mouse_press(int key, int x, int y, void *w)

@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 15:16:54 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 13:58:24 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 19:01:10 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -528,7 +528,7 @@ void    set_minimap()
     data.door.door[0][0].addr = mlx_get_data_addr(data.door.door[0][0].mlx_img, &data.door.door[0][0].bpp, &data.door.door[0][0].line_len, &data.door.door[0][0].endian);
     data.door.door[0][1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/dor1_1.xpm", &w, &h);
     data.door.door[0][1].addr = mlx_get_data_addr(data.door.door[0][1].mlx_img, &data.door.door[0][1].bpp, &data.door.door[0][1].line_len, &data.door.door[0][1].endian);
-    
+     
 
     int i;
     i = -1;

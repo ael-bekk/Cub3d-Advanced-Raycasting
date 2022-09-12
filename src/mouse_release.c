@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 21:37:37 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 14:41:40 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 15:24:05 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,8 @@ void    mouse_release_map(int key)
 {
     if (data.intro.g_k[7] == M_LEFT_CLICK && key == LEFT_CLICK)
         data.keys[data.intro.g_k[7]] = 0;
+    if (data.intro.g_k[8] == M_RIGHT_CLICK && key == RIGHT_CLICK)
+        data.keys[data.intro.g_k[8]] = 0;
 }
 
 int mouse_release(int key, int x, int y, void *w)

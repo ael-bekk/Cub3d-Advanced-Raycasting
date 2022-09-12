@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 11:52:40 by mel-hada          #+#    #+#             */
-/*   Updated: 2022/09/11 14:27:58 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 16:04:40 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,10 @@ void init_args(t_map **map)
     data.zoom = 0;
     data.mv_x = 0;
     data.mv_y = 0;
+    data.map_zoom = 0;
+    data.map_rotation = 0;
+    data.c_x = 0;
+    data.c_y = 0;
     init_keys();
     *map = NULL;
 }

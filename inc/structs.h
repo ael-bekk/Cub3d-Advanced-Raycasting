@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 12:01:01 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 14:27:35 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/11 16:04:55 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,8 +263,12 @@ typedef struct s_data
 	int			use_gun;
 	int			aim;
 	int			zoom;
+	double		map_zoom;
+	int			map_rotation;
 	int			mv_x;
 	int			mv_y;
+	int			c_x;
+	int			c_y;
 }   t_data;
 
 
