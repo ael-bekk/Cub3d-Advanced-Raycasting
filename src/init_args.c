@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 11:52:40 by mel-hada          #+#    #+#             */
-/*   Updated: 2022/09/11 16:04:40 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/13 21:19:30 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,17 @@ void    init_guns_objects()
     
 }
 
+void init_motions_enemies()
+{
+    int i;
+
+    i = -1;
+    while (++i < 7)
+        data.motion[i].frame = 0;
+}
+
 void init_args(t_map **map)
 {
-
     data.c = 0;
     data.dir.ph = 0.5;
     data.floor.r = -1;
@@ -136,7 +144,7 @@ void init_args(t_map **map)
     data.intro.up = 0;
     data.door.op = 15;
     data.door.is_op = 0;
-    data.mode = SETTING;
+    data.mode = GAME;
     data.light = 0;
     data.bld = 0;
     data.sound.hover = 0;
@@ -155,6 +163,8 @@ void init_args(t_map **map)
     data.map_rotation = 0;
     data.c_x = 0;
     data.c_y = 0;
+    data.enemy[0].frm = 0;
+    init_motions_enemies();
     init_keys();
     *map = NULL;
 }

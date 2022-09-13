@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 11:59:21 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 19:00:40 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/13 21:23:03 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void    init_gun(int o, int len, char *path)
     }
 }
 
+
 void    init_guns()
 {
 	char path[100];
@@ -70,4 +71,26 @@ void    init_guns()
     
 	ft_memcpy(path, "img/guns/g8/", 12);
     init_gun(5, 27, path);
+}
+
+void    init_motion_imgs(int o, int len, char *path)
+{
+    int i;
+
+    i = 0;
+    while (++i < len)
+    {
+        path_name2(path, i, 16); 
+        data.motion[o].frm[i - 1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, path, &data.motion[o].frm[i - 1].x, &data.motion[o].frm[i - 1].y);
+        data.motion[o].frm[i - 1].addr = mlx_get_data_addr(data.motion[o].frm[i - 1].mlx_img, &data.motion[o].frm[i - 1].bpp, &data.motion[o].frm[i - 1].line_len, &data.motion[o].frm[i - 1].endian);
+    }
+    data.motion[o].frame = len - 7;
+}
+
+void    init_motion()
+{
+	char path[100];
+
+	ft_memcpy(path, "img/enemies/run/", 16);
+    init_motion_imgs(0, 23, path);
 }

@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 12:08:28 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/08/24 14:11:07 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/13 18:09:28 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void    check_map()
     int i;
     int j;
 
+    data.enm_nb = 0;
     i = -1;
     while (data.map[++i])
     {
@@ -41,6 +42,14 @@ void    check_map()
                     data.dir.py = data.dir.y;
                     data.map[i][j] = '0';
                     data.door.map[i][j] = '0';
+                }
+                if (data.map[i][j] == '*')
+                {
+                    data.enemy[data.enm_nb].x = j * 50 + 24;
+                    data.enemy[data.enm_nb].y = i * 50 + 24;
+                    data.map[i][j] = '0';
+                    data.door.map[i][j] = '0';
+                    data.enm_nb++;
                 }
             }
         }

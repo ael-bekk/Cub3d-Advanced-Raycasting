@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:32:22 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 14:01:01 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/13 21:20:10 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -579,6 +579,9 @@ void    render_game()
 
 			if ((!data.keys[data.intro.g_k[9]] || (data.keys[data.intro.g_k[9]] && data.sound.breath)) && data.objects.breath < 100)
 				data.objects.breath += !(data.light % 5);
+		data.enemy[0].frm++;
+		if (data.enemy[0].frm >= data.motion[0].frame)
+			data.enemy[0].frm = 0;
 	}
 	cnt++;
 	if (data.door.op > 0 && data.door.is_op)

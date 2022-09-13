@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 15:16:54 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 19:01:10 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/13 21:45:48 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void    variant_calculate_d(double *cord, double decrease, int angl)
         && data.map[(int)cord[1] /50][(int)(cord[0] + decrease * data.angles.r_cos[angl])/50] == '0'
         && data.map[(int)(cord[1] + decrease * data.angles.r_sin[angl])/50][(int)(cord[0] + decrease * data.angles.r_cos[angl])/50] == '0')
     {
-        cord[0] += decrease * data.angles.r_cos[angl];
+        cord[0] += decrease * data.angles.r_cos[angl]; 
         cord[1] += decrease * data.angles.r_sin[angl];
         v = 1;
     }
@@ -87,7 +87,7 @@ void    set_rays()
         cord[0] = data.dir.x + 17;
         cord[1] = data.dir.y + 17;
         data.indx = i;
-        
+    
         variant_calculate_d(cord, 45, i);
         variant_calculate_d(cord, 20, i);
         variant_calculate_d(cord, 10, i);
@@ -108,7 +108,7 @@ void    set_rays()
                 data.door.color[1] = (int)cord[0];
             else if (data.map[(int)(cord[1] + data.angles.r_sin[i])/50][(int)cord[0]/50] == 'H' && cord[1] + data.angles.r_sin[i] < cord[1])
                 data.door.color[1] = (int)cord[0];
-            data.door.rays = sqrt((cord[0] - (double)data.dir.x - 17)*(cord[0] - (double)data.dir.x - 17) + (cord[1] - (double)data.dir.y - 17)*(cord[1] - (double)data.dir.y - 17)) * data.angles.r_res_cos[i];
+            data.door.rays[i] = sqrt((cord[0] - (double)data.dir.x - 17)*(cord[0] - (double)data.dir.x - 17) + (cord[1] - (double)data.dir.y - 17)*(cord[1] - (double)data.dir.y - 17)) * data.angles.r_res_cos[i];
             variant_calculate(cord, 45, i);
             variant_calculate(cord, 20, i);
             variant_calculate(cord, 10, i);
@@ -125,7 +125,7 @@ void    set_rays()
         else if (data.map[(int)(cord[1] + data.angles.r_sin[i])/50][(int)cord[0]/50] == '1' && cord[1] + data.angles.r_sin[i] < cord[1])
             data.color[1] = (int)cord[0];
 
-        data.rays = sqrt((cord[0] - (double)data.dir.x - 17)*(cord[0] - (double)data.dir.x - 17) + (cord[1] - (double)data.dir.y - 17)*(cord[1] - (double)data.dir.y - 17)) * data.angles.r_res_cos[i];
+        data.rays[i] = sqrt((cord[0] - (double)data.dir.x - 17)*(cord[0] - (double)data.dir.x - 17) + (cord[1] - (double)data.dir.y - 17)*(cord[1] - (double)data.dir.y - 17)) * data.angles.r_res_cos[i];
         i++;
         data.cord = cord;
         data.design = data.door.map[(int)(cord[1] - data.angles.r_sin[i])/50][(int)(cord[0] - data.angles.r_cos[i])/50];
@@ -158,14 +158,106 @@ void    paint_img3(t_img *img, t_img *img2)
     }
 }
 
+int get_enemy_color(double x, double y)
+{
+    return (*(int *)(data.motion[0].frm[data.enemy[0].frm].addr + ((int)round(y * (500.0 / 64.0)) * data.motion[0].frm[data.enemy[0].frm].line_len + (int)round(x) * (data.motion[0].frm[data.enemy[0].frm].bpp / 8))));
+}
+
+void    cast_to_3d_for_enemies(int start_x, int i)
+{
+    int j;
+    int forward;
+    int forward2;
+    // unsigned int color;
+
+    if (!data.enemy[i].dist)
+        data.enemy[i].dist = 1;
+    data.enemy[i].dist = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / data.enemy[i].dist);
+    forward = (RES_Y / 2 - data.enemy[i].dist * data.dir.ph)  - data.c + 10;
+    forward2 = forward;
+    if (forward < 0)
+        forward = 0;
+    if (forward > RES_Y)
+        forward = RES_Y;
+    int start = start_x;
+    unsigned int color;
+    while (--start > start_x - (data.enemy[i].dist - 100) / 2)
+    {
+        if (start > 0)
+        {
+            j = forward;
+            while ((int)(64 / data.enemy[i].dist * (j - forward2)) < 64 && j < RES_Y)
+            {
+                color = get_enemy_color((start - start_x + (data.enemy[i].dist - 100) / 2.0) * (422.0 / (data.enemy[i].dist - 100)), (64 / data.enemy[i].dist * ((j - forward2))));
+                if (color < 0xff000000)
+                    img_pix_put(&data.img, start, j, color);
+                j++;
+            }
+        }
+    }
+    start = start_x - 1;
+    while (++start < start_x + (data.enemy[i].dist - 100) / 2)
+    {
+        if (start < 1500)
+        {
+            j = forward;
+            while ((int)(64 / data.enemy[i].dist * (j - forward2)) < 64 && j < RES_Y)
+            {
+                color = get_enemy_color((start - start_x + (data.enemy[i].dist - 100) / 2.0) * (422.0 / (data.enemy[i].dist - 100)), (64 / data.enemy[i].dist * ((j - forward2))));
+                if (color < 0xff000000)
+                    img_pix_put(&data.img, start, j, color);
+                j++;
+            }
+        }
+    }
+}
+
+void    sort_enemies()
+{
+    int i;
+    int j;
+    int tmp;
+
+    i = -1;
+    while (++i < data.enm_nb - 1)
+    {
+        tmp = i;
+        j = i;
+        while (++j < data.enm_nb)
+            if (data.enemy[j].dist > data.enemy[tmp].dist)
+                tmp = j;
+        if (tmp != i)
+        {
+            t_enm p = data.enemy[tmp];
+            data.enemy[tmp] = data.enemy[i];
+            data.enemy[i] = p;
+        }
+    }
+    i = -1;
+    while (++i < data.enm_nb)
+    {
+        double angle = atan2(data.enemy[i].y - data.dir.y, data.enemy[i].x - data.dir.x) * 180 / M_PI;
+        if ((int)fabs(data.dir.angle - angle + 30) % 360 >= 0 && ((int)fabs(data.dir.angle - angle + 30) % 360) < 60)
+        {
+            cast_to_3d_for_enemies(1500 - ((int)fabs(data.dir.angle - angle + 30) % 360) / 0.04, i);
+            // if (data.enemy[i].dist < 50.0)
+            // {
+                data.enemy[i].x -= 4 * cos(angle * M_PI / 180.0);
+                data.enemy[i].y -= 4 * sin(angle * M_PI / 180.0);
+            // }
+        }
+    }
+}
+
 void    set_char_to_win()
 {
     mlx_clear_window(data.mlx.mlx_ptr, data.mlx.win_ptr);
-    // pthread_t t;
 
-    // pthread_create(&t, NULL, &set_rays2, NUL);
-    // usleep(100);
     set_rays();
+    int j = -1;
+    while (++j < data.enm_nb)
+        data.enemy[j].dist = sqrt((data.enemy[j].x - data.dir.x) * (data.enemy[j].x - data.dir.x) + (data.enemy[j].y - data.dir.y) * (data.enemy[j].y - data.dir.y));
+    sort_enemies();
     // pthread_join(p, NULL);
     if (data.aim)
         paint_img3(&data.img2, &data.img);
@@ -523,6 +615,7 @@ void    set_minimap()
     data.intro.lgt[1].addr = mlx_get_data_addr(data.intro.lgt[1].mlx_img, &data.intro.lgt[1].bpp, &data.intro.lgt[1].line_len, &data.intro.lgt[1].endian);
     paint_color(&data.intro.lgt[1], 0xffffff, 25, 40);
     init_guns();
+    init_motion();
     
     data.door.door[0][0].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/dor1_0.xpm", &w, &h);
     data.door.door[0][0].addr = mlx_get_data_addr(data.door.door[0][0].mlx_img, &data.door.door[0][0].bpp, &data.door.door[0][0].line_len, &data.door.door[0][0].endian);

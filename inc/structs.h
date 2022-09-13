@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 12:01:01 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 16:04:55 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/13 16:11:10 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,13 +182,22 @@ typedef struct s_door
 	int		counter;
 	char	**map;
 	t_img	door[8][2];
-	double	rays;
+	double	rays[1500];
 	int		hit_wall;
 	int		c;
 }	t_door;
 
 /*************************************************************************/
-/*========                        angles                         ========*/
+/*========                     enemy motion                      ========*/
+/*************************************************************************/
+typedef struct s_enemies_motion
+{
+	int 	frame;
+	t_img	frm[100];
+}	t_enemies_motion;
+
+/*************************************************************************/
+/*========                         angles                        ========*/
 /*************************************************************************/
 typedef struct s_angle
 {
@@ -215,6 +224,19 @@ typedef struct s_gun
 	t_img	gun[90];
 }	t_gun;
 
+/************************************************************************/
+/*========              object position / direction             ========*/
+/************************************************************************/
+typedef struct s_enm
+{
+	double		dist;
+	int			motion;
+	int			frm;
+	int			id;
+	int			x;
+	int			y;
+}   t_enm;
+
 /*************************************************************************/
 /*========                     global struct                     ========*/
 /*************************************************************************/
@@ -231,7 +253,7 @@ typedef struct s_data
 	int			width;
 	int			c;
 	int			speed;
-	double		rays;
+	double		rays[1500];
 	int			color[2];
 	char		**map;
 	int			*w_map;
@@ -269,6 +291,9 @@ typedef struct s_data
 	int			mv_y;
 	int			c_x;
 	int			c_y;
+	t_enm		enemy[100];
+	int			enm_nb;
+	t_enemies_motion	motion[7];
 }   t_data;
 
 

@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 11:53:23 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 19:01:05 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/13 14:56:58 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@
 # define Y 1080 - 181
 # define MX 1500 - 186 + 16.5
 # define MY 1080 - 176 + 16.5
-# define MAP_CHAR "01NSWEH "
+# define MAP_CHAR "01NSWEH* "
 # define ANGLE 2
 # define ANGLES 4
 

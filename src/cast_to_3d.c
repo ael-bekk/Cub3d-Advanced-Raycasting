@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 22:09:00 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 13:41:03 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/13 17:54:09 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ void    points_put(int x, int y)
         while (++j < 10)
         {
             if (i && i < 9 && j && j < 9)
-                img_pix_put(&data.img, i + x, j + y, 0x000000);
+                img_pix_put(&data.img3, i + x, j + y, 0x000000);
             else
-                img_pix_put(&data.img, i + x, j + y, 0xadb5bd);
+                img_pix_put(&data.img3, i + x, j + y, 0xadb5bd);
         }
     }
 }
@@ -176,17 +176,17 @@ void    cast_to_3d_for_door(int i)
     int forward2;
     unsigned int color;
 
-    if (!data.door.rays)
-        data.door.rays = 1;
-    data.door.rays = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / data.door.rays);
-    forward = (RES_Y / 2 - data.door.rays * data.dir.ph)  - data.c;
+    if (!data.door.rays[i])
+        data.door.rays[i] = 1;
+    data.door.rays[i] = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / data.door.rays[i]);
+    forward = (RES_Y / 2 - data.door.rays[i] * data.dir.ph)  - data.c;
     forward2 = forward;
     if (forward < 0)
         forward = 0;
     if (forward > RES_Y)
         forward = RES_Y;
     j = forward;
-    while ((int)(64 / data.door.rays * (j - forward2)) < 64 && j < RES_Y)
+    while ((int)(64 / data.door.rays[i] * (j - forward2)) < 64 && j < RES_Y)
     {
         if (i >= (RES_X / 3) * 2)
             put_clob_tex_object(j, i - (RES_X / 3) * 2);
@@ -195,7 +195,7 @@ void    cast_to_3d_for_door(int i)
             img_pix_put(&data.img, i, j , color);
         else
         {
-            color = set_design(3, i, (int)(64 / data.door.rays * ((j - forward2))) % 64, data.design);
+            color = set_design(3, i, (int)(64 / data.door.rays[i] * ((j - forward2))) % 64, data.design);
             if (color < 0xff000000)
                 img_pix_put(&data.img, i, j, color);
         }
@@ -210,10 +210,10 @@ void    cast_to_3d(int i)
     int forward2;
     unsigned int color;
 
-    if (!data.rays)
-        data.rays = 1;
-    data.rays = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / data.rays);
-    forward = (RES_Y / 2 - data.rays * data.dir.ph) - data.c;
+    if (!data.rays[i])
+        data.rays[i] = 1;
+    data.rays[i] = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / data.rays[i]);
+    forward = (RES_Y / 2 - data.rays[i] * data.dir.ph) - data.c;
     forward2 = forward;
     if (forward < 0)
         forward = 0;
@@ -233,7 +233,7 @@ void    cast_to_3d(int i)
         j++;
     }
 
-    while ((int)(64 / data.rays * (j - forward2)) < 64 && j < RES_Y)
+    while ((int)(64 / data.rays[i] * (j - forward2)) < 64 && j < RES_Y)
     {
         if (i >= (RES_X / 3) * 2)
             put_clob_tex_object(j, i - (RES_X / 3) * 2);
@@ -241,7 +241,7 @@ void    cast_to_3d(int i)
         if (j > data.g_mv && i < 1500  && color != 0xff000000 && color != 0x00ffff)
             img_pix_put(&data.img, i, j, color);
         else
-            img_pix_put(&data.img, i, j, set_design(3, i, (int)(64 / data.rays * (j - forward2)) % 64, data.design));
+            img_pix_put(&data.img, i, j, set_design(3, i, (int)(64 / data.rays[i] * (j - forward2)) % 64, data.design));
         j++;
     }
     
