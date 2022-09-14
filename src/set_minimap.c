@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 15:16:54 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/14 17:39:25 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/14 18:40:02 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,33 +165,32 @@ int get_enemy_color(double x, double y)
     return (*(int *)(data.motion[0].frm[data.enemy[0].frm].addr + ((((int)round(y * (591.0 / 64.0)) - 60) % 591) * data.motion[0].frm[data.enemy[0].frm].line_len + (int)round(x) * (data.motion[0].frm[data.enemy[0].frm].bpp / 8))));
 }
 
-void    cast_to_3d_for_enemies(int start_x, int i)
+void    cast_to_3d_for_enemies(int start_x, int i, double dist)
 {
     int j;
     int forward;
     int forward2;
-    // unsigned int color;
+    unsigned int color;
 
-    if (!data.enemy[i].dist)
-        data.enemy[i].dist = 1;
-    data.enemy[i].dist = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / data.enemy[i].dist);
-    forward = (RES_Y / 2 - data.enemy[i].dist * (data.dir.ph)) - data.c + 5;
+    if (!dist)
+        dist = 1;
+    dist = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / dist);
+    forward = (RES_Y / 2 - dist * (data.dir.ph)) - data.c + 5;
     forward2 = forward;
     if (forward < 0)
         forward = 0;
     if (forward > RES_Y)
         forward = RES_Y;
     int start = start_x;
-    unsigned int color;
-    data.enemy[i].width = data.enemy[i].dist - 170 * ((591.0 / 422.0) / data.enemy[i].dist);
+    data.enemy[i].width = dist - 170 * ((591.0 / 422.0) / dist);
     while (--start > start_x - data.enemy[i].width / 2)
     {
-        if (start < 1500 && start >= 0)
+        if (start < 1500 && start >= 0 && dist > data.rays[start])
         {
             j = forward;
-            while ((int)(64 / data.enemy[i].dist * (j - forward2)) < 64 && j < RES_Y)
+            while ((int)(64 / dist * (j - forward2)) < 64 && j < RES_Y)
             {
-                color = get_enemy_color((start - start_x + data.enemy[i].width / 2.0) * (422.0 / data.enemy[i].width), (64 / data.enemy[i].dist * ((j - forward2))));
+                color = get_enemy_color((start - start_x + data.enemy[i].width / 2.0) * (422.0 / data.enemy[i].width), (64 / dist * ((j - forward2))));
                 if (color < 0xff000000)
                     img_pix_put(&data.img, start, j, color);
                 j++;
@@ -201,17 +200,18 @@ void    cast_to_3d_for_enemies(int start_x, int i)
     start = start_x - 1;
     while (++start < start_x + data.enemy[i].width / 2)
     {
-        if (start < 1500 && start >= 0)
+        if (start < 1500 && start >= 0 && dist > data.rays[start])
         {
             j = forward;
-            while ((int)(64 / data.enemy[i].dist * (j - forward2)) < 64 && j < RES_Y)
+            while ((int)(64 / dist * (j - forward2)) < 64 && j < RES_Y)
             {
-                color = get_enemy_color((start - start_x + data.enemy[i].width / 2.0) * (422.0 / data.enemy[i].width), (64 / data.enemy[i].dist * ((j - forward2))));
+                color = get_enemy_color((start - start_x + data.enemy[i].width / 2.0) * (422.0 / data.enemy[i].width), (64 / dist * ((j - forward2))));
                 if (color < 0xff000000)
                     img_pix_put(&data.img, start, j, color);
                 j++;
             }
         }
+
     }
 }
 
@@ -223,16 +223,21 @@ void    up_monster(int i, double speed, int angle)
     x = data.enemy[i].x + round(speed * cos((angle + 180) * M_PI / 180.0));
     y = data.enemy[i].y + round(speed * sin((angle + 180) * M_PI / 180.0));
         
-    if (data.map[y / 50][x / 50] != '1'
-        && data.map[y / 50][data.enemy[i].x / 50] != '1'
-        && data.map[data.enemy[i].y / 50][x / 50] != '1')
+    if (data.map[(y + 17) / 50][(x + 17) / 50] != '1'
+        && data.map[(y + 17) / 50][(data.enemy[i].x + 17) / 50] != '1'
+        && data.map[(data.enemy[i].y + 17) / 50][(x + 17) / 50] != '1'
+        && data.map[(y + 14) / 50][(x + 14) / 50] != '1'
+        && data.map[(y + 14) / 50][(data.enemy[i].x + 14) / 50] != '1'
+        && data.map[(data.enemy[i].y + 14) / 50][(x + 14) / 50] != '1')
     {
         data.enemy[i].x = x;
         data.enemy[i].y = y;
     }
-    else if (data.map[data.enemy[i].y / 50][x / 50] != '1')
+    else if (data.map[(data.enemy[i].y + 17) / 50][(x + 17) / 50] != '1'
+            && data.map[(data.enemy[i].y + 14) / 50][(x + 14) / 50] != '1')
         data.enemy[i].x = x;
-    else if (data.map[y / 50][data.enemy[i].x / 50] != '1')
+    else if (data.map[(y + 17) / 50][(data.enemy[i].x + 17) / 50] != '1'
+            && data.map[(y + 14) / 50][(data.enemy[i].x + 14) / 50] != '1')
         data.enemy[i].y = y;
 }
 
@@ -262,20 +267,19 @@ void    sort_enemies()
     {
         double angle = atan2(data.enemy[i].y - data.dir.y, data.enemy[i].x - data.dir.x) * 180 / M_PI;
         angle += 360 * (angle < 0);
+        int ang = (int)(data.dir.angle - angle) % 360;
+        if (ang > 180)
+            ang -= 360;
+        else if (ang < -180)
+            ang += 360;
+        if (ang < 40 && ang > -40)
+            cast_to_3d_for_enemies(1750 - (ang + 40) / 0.04, i, data.enemy[i].dist);
         if (data.enemy[i].dist > 100)
             data.enemy[i].motion = 0,
             up_monster(i, 4, angle);
         else if (data.enemy[i].dist > 50)
             data.enemy[i].motion = 1,
             up_monster(i, 1, angle);
-        angle = (int)(data.dir.angle - angle) % 360;
-        if (angle > 180)
-            angle -= 360;
-        else if (angle < -180)
-            angle += 360;
-        if (angle < 40 && angle > -40)
-            cast_to_3d_for_enemies(1750 - (angle + 40) / 0.04, i);
-        printf("%f  \n", angle);
     }
 }
  
