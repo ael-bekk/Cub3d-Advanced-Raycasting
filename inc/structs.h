@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 12:01:01 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/13 16:11:10 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/14 10:24:47 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,6 +229,7 @@ typedef struct s_gun
 /************************************************************************/
 typedef struct s_enm
 {
+	double		width; 
 	double		dist;
 	int			motion;
 	int			frm;
@@ -294,6 +295,7 @@ typedef struct s_data
 	t_enm		enemy[100];
 	int			enm_nb;
 	t_enemies_motion	motion[7];
+	char		color_maping[1080][1500];
 }   t_data;
 
 
