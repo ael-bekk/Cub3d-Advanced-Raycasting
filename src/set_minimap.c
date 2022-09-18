@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 15:16:54 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/14 18:40:02 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/18 17:21:00 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,58 +160,67 @@ void    paint_img3(t_img *img, t_img *img2)
 
 int get_enemy_color(double x, double y)
 {
-    if ((int)round(y * (591.0 / 64.0)) - 60 < 0)
-        return (0xff000000);
-    return (*(int *)(data.motion[0].frm[data.enemy[0].frm].addr + ((((int)round(y * (591.0 / 64.0)) - 60) % 591) * data.motion[0].frm[data.enemy[0].frm].line_len + (int)round(x) * (data.motion[0].frm[data.enemy[0].frm].bpp / 8))));
-}
+    t_img *img;
+
+    img = &(data.motion[data.enemy[0].motion].frm[data.enemy[0].frm]);
+    if (!data.enemy[0].motion || data.enemy[0].motion == 4 || data.enemy[0].motion == 5 || data.enemy[0].motion == 6)
+    {
+        if ((int)round(y * (551.0 / 64.0)) - (25 - 5 * (data.enemy[0].motion == 5 || data.enemy[0].motion == 6)) < 0 || (int)round(y * (551.0 / 64.0)) - (25 - 5 * (data.enemy[0].motion == 5 || data.enemy[0].motion == 6)) >= img->y)
+            return (0xff000000);
+        return (*(int *)(img->addr + ((((int)round(y * (551.0 / 64.0)) - (25 - 5 * (data.enemy[0].motion == 5 || data.enemy[0].motion == 6)))) * img->line_len + (int)round(x) * (img->bpp / 8))));
+    }
+    if (data.enemy[0].motion == 1)
+    {
+        if ((int)round(y * (591.0 / 64.0)) - 60 < 0)
+            return (0xff000000);
+        return (*(int *)(img->addr + ((((int)round((y * (591.0 / 64.0))) - 60)) * img->line_len + (int)round(x) * (img->bpp / 8))));
+    }
+    if (data.enemy[0].motion == 3)
+    {
+        if ((int)round(y * (460.0 / 64.0)) - 52 < 0 && x + 7 < img->x)
+            return (0xff000000);
+        return (*(int *)(img->addr + ((((int)round((y * (460.0 / 64.0))) - 52)) * img->line_len + (int)round(x + 7) * (img->bpp / 8))));
+    }
+    return (*(int *)(img->addr + ((((int)round((y * (380.0 / 64.0))) + 50)) * img->line_len + (int)round(x) * (img->bpp / 8))));
+} 
 
 void    cast_to_3d_for_enemies(int start_x, int i, double dist)
-{
+{ 
     int j;
     int forward;
     int forward2;
     unsigned int color;
 
+    double img_x;
+    double img_y;
+
+    img_x = data.motion[data.enemy[0].motion].frm[data.enemy[0].frm].x;
+    img_y = data.motion[data.enemy[0].motion].frm[data.enemy[0].frm].y;
     if (!dist)
         dist = 1;
-    dist = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / dist);
-    forward = (RES_Y / 2 - dist * (data.dir.ph)) - data.c + 5;
+    dist = round((50 * (RES_X / 2) / data.angles.cte_tan) / dist);
+    forward = (RES_Y / 2 - dist * (data.dir.ph - 0.1)) - data.c;
     forward2 = forward;
     if (forward < 0)
         forward = 0;
     if (forward > RES_Y)
         forward = RES_Y;
-    int start = start_x;
-    data.enemy[i].width = dist - 170 * ((591.0 / 422.0) / dist);
-    while (--start > start_x - data.enemy[i].width / 2)
+    int start = start_x - data.enemy[i].width / 2;
+    data.enemy[i].width = dist - 170 * ((img_y / img_x) / dist) + 800 * (data.enemy[0].motion == 2) + 580 * (data.enemy[0].motion == 3) + 200 * (data.enemy[0].motion == 4 || data.enemy[0].motion == 5 || data.enemy[0].motion == 6);
+    while (++start < start_x + data.enemy[i].width / 2 && start < 1500)
     {
-        if (start < 1500 && start >= 0 && dist > data.rays[start])
+        if (start >= 0 && dist > data.rays[start])
         {
             j = forward;
             while ((int)(64 / dist * (j - forward2)) < 64 && j < RES_Y)
             {
-                color = get_enemy_color((start - start_x + data.enemy[i].width / 2.0) * (422.0 / data.enemy[i].width), (64 / dist * ((j - forward2))));
-                if (color < 0xff000000)
+                color = get_enemy_color((start - start_x + data.enemy[i].width / 2.0) * (img_x / data.enemy[i].width), (64 / dist * ((j - forward2))));
+                if (color < 0xff000000 && data.color_maping[j][start] != 'G' && data.color_maping[j][start] != '*')
+                    data.color_maping[j][start] = '*',
                     img_pix_put(&data.img, start, j, color);
                 j++;
             }
         }
-    }
-    start = start_x - 1;
-    while (++start < start_x + data.enemy[i].width / 2)
-    {
-        if (start < 1500 && start >= 0 && dist > data.rays[start])
-        {
-            j = forward;
-            while ((int)(64 / dist * (j - forward2)) < 64 && j < RES_Y)
-            {
-                color = get_enemy_color((start - start_x + data.enemy[i].width / 2.0) * (422.0 / data.enemy[i].width), (64 / dist * ((j - forward2))));
-                if (color < 0xff000000)
-                    img_pix_put(&data.img, start, j, color);
-                j++;
-            }
-        }
-
     }
 }
 
@@ -222,22 +231,22 @@ void    up_monster(int i, double speed, int angle)
 
     x = data.enemy[i].x + round(speed * cos((angle + 180) * M_PI / 180.0));
     y = data.enemy[i].y + round(speed * sin((angle + 180) * M_PI / 180.0));
-        
+
     if (data.map[(y + 17) / 50][(x + 17) / 50] != '1'
         && data.map[(y + 17) / 50][(data.enemy[i].x + 17) / 50] != '1'
         && data.map[(data.enemy[i].y + 17) / 50][(x + 17) / 50] != '1'
-        && data.map[(y + 14) / 50][(x + 14) / 50] != '1'
-        && data.map[(y + 14) / 50][(data.enemy[i].x + 14) / 50] != '1'
-        && data.map[(data.enemy[i].y + 14) / 50][(x + 14) / 50] != '1')
+        && data.map[(y + 10) / 50][(x + 10) / 50] != '1'
+        && data.map[(y + 10) / 50][(data.enemy[i].x + 10) / 50] != '1'
+        && data.map[(data.enemy[i].y + 10) / 50][(x + 10) / 50] != '1')
     {
         data.enemy[i].x = x;
         data.enemy[i].y = y;
     }
     else if (data.map[(data.enemy[i].y + 17) / 50][(x + 17) / 50] != '1'
-            && data.map[(data.enemy[i].y + 14) / 50][(x + 14) / 50] != '1')
+            && data.map[(data.enemy[i].y + 10) / 50][(x + 10) / 50] != '1')
         data.enemy[i].x = x;
     else if (data.map[(y + 17) / 50][(data.enemy[i].x + 17) / 50] != '1'
-            && data.map[(y + 14) / 50][(data.enemy[i].x + 14) / 50] != '1')
+            && data.map[(y + 10) / 50][(data.enemy[i].x + 10) / 50] != '1')
         data.enemy[i].y = y;
 }
 
@@ -253,7 +262,7 @@ void    sort_enemies()
         tmp = i;
         j = i;
         while (++j < data.enm_nb)
-            if (data.enemy[j].dist > data.enemy[tmp].dist)
+            if (data.enemy[j].dist < data.enemy[tmp].dist)
                 tmp = j;
         if (tmp != i)
         {
@@ -268,21 +277,48 @@ void    sort_enemies()
         double angle = atan2(data.enemy[i].y - data.dir.y, data.enemy[i].x - data.dir.x) * 180 / M_PI;
         angle += 360 * (angle < 0);
         int ang = (int)(data.dir.angle - angle) % 360;
-        if (ang > 180)
-            ang -= 360;
-        else if (ang < -180)
-            ang += 360;
+        ang += 360 * ((ang < -180) - (ang > 180));
+        if (data.enemy[i].dist > 65)
+        {
+            if (data.enemy[i].old_motion)
+                data.enemy[i].frm = 0,
+                data.enemy[i].motion = 0;
+            up_monster(i, 5, angle);
+            data.enemy[0].frm++;
+        }
+        else if (data.enemy[i].dist > 50)
+        {
+            if (data.enemy[i].old_motion != 1)
+                data.enemy[i].frm = 0,
+                data.enemy[i].motion = 1;
+            up_monster(i, 1, angle);
+            data.enemy[0].frm++;
+        }
+        else
+        {
+            if (!data.enemy[i].frm || data.enemy[i].motion <= 1)
+            {
+                data.enemy[i].frm = 0,
+                data.enemy[i].motion++;
+                if (data.enemy[i].motion == 7) 
+                    data.enemy[i].motion = 2;
+            }
+            if (data.enemy[i].motion == 4 || data.enemy[0].motion == 5 || data.enemy[0].motion == 6)
+                data.enemy[i].dist -= 15;
+            if (data.enemy[i].dist < 0)
+                data.enemy[i].dist = 0;
+            data.enemy[0].frm += 2;
+        }
+        if (data.enemy[i].frm >= data.motion[data.enemy[i].motion].frame)
+			data.enemy[i].frm = 0;
+        data.enemy[i].old_motion = data.enemy[i].motion;
+
         if (ang < 40 && ang > -40)
             cast_to_3d_for_enemies(1750 - (ang + 40) / 0.04, i, data.enemy[i].dist);
-        if (data.enemy[i].dist > 100)
-            data.enemy[i].motion = 0,
-            up_monster(i, 4, angle);
-        else if (data.enemy[i].dist > 50)
-            data.enemy[i].motion = 1,
-            up_monster(i, 1, angle);
+
     }
 }
- 
+
 void    set_char_to_win()
 {
     mlx_clear_window(data.mlx.mlx_ptr, data.mlx.win_ptr);
@@ -310,6 +346,7 @@ void    set_char_to_win()
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.sl, RES_X - 242, 175);
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.nums[data.gun[data.objects.w].bullet / 10].mlx_img, RES_X - (242 - 17), 175);
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.nums[data.gun[data.objects.w].bullet % 10].mlx_img, RES_X - (242 - 17 * 2), 175);
+    mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.cross.mlx_img, RES_X / 2 - 20, RES_Y / 2 - 20);
 }
 
 void    paint_img(t_img *img, char *path, int res_x, int res_y)
@@ -655,7 +692,9 @@ void    set_minimap()
     data.door.door[0][0].addr = mlx_get_data_addr(data.door.door[0][0].mlx_img, &data.door.door[0][0].bpp, &data.door.door[0][0].line_len, &data.door.door[0][0].endian);
     data.door.door[0][1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/dor1_1.xpm", &w, &h);
     data.door.door[0][1].addr = mlx_get_data_addr(data.door.door[0][1].mlx_img, &data.door.door[0][1].bpp, &data.door.door[0][1].line_len, &data.door.door[0][1].endian);
-     
+    
+    data.cross.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/cross3.xpm", &w, &h);
+    data.cross.addr = mlx_get_data_addr(data.cross.mlx_img, &data.cross.bpp, &data.cross.line_len, &data.cross.endian);
 
     int i;
     i = -1;

@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 22:09:00 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/14 18:01:31 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/16 17:58:53 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int get_color_22(double dy, int side)
 {
 	double  angle;
 	double	dy_angle;
-	double	tx;
+	double	tx;  
 	double	ty;
 
 	angle = data.angles.r_res_cos[data.indx];
@@ -178,7 +178,7 @@ void    cast_to_3d_for_door(int i)
 
     if (!data.door.rays[i])
         data.door.rays[i] = 1;
-    data.door.rays[i] = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / data.door.rays[i]);
+    data.door.rays[i] = round((50 * (RES_X / 2) / data.angles.cte_tan) / data.door.rays[i]);
     forward = (RES_Y / 2 - data.door.rays[i] * data.dir.ph)  - data.c;
     forward2 = forward;
     if (forward < 0)
@@ -197,6 +197,7 @@ void    cast_to_3d_for_door(int i)
         {
             color = set_design(3, i, (int)(64 / data.door.rays[i] * ((j - forward2))) % 64, data.design);
             if (color < 0xff000000)
+                data.color_maping[j][i] = 'D',
                 img_pix_put(&data.img, i, j, color);
         }
         j++;
@@ -212,7 +213,7 @@ void    cast_to_3d(int i)
 
     if (!data.rays[i])
         data.rays[i] = 1;
-    data.rays[i] = round((50 * (RES_X / 2) / tan(30 * M_PI / 180)) / data.rays[i]);
+    data.rays[i] = round((50 * (RES_X / 2) / data.angles.cte_tan) / data.rays[i]);
     forward = (RES_Y / 2 - data.rays[i] * data.dir.ph) - data.c;
     forward2 = forward;
     if (forward < 0)
@@ -227,8 +228,10 @@ void    cast_to_3d(int i)
             put_clob_tex_object(j, i - (RES_X / 3) * 2);
         color = (unsigned int)get_gun_color(i + data.aim * 4, j - data.g_mv);
         if (j > data.g_mv && i < 1500  && color != 0xff000000 && color != 0x00ffff)
+            data.color_maping[j][i] = 'G',
             img_pix_put(&data.img, i, j, color);
         else
+            data.color_maping[j][i] = 'C',
             img_pix_put(&data.img, i, j, get_color_22((RES_Y / 2 - j - data.c), -1));
         j++;
     }
@@ -239,8 +242,10 @@ void    cast_to_3d(int i)
             put_clob_tex_object(j, i - (RES_X / 3) * 2);
         color = (unsigned int)get_gun_color(i + data.aim * 4, j - data.g_mv);
         if (j > data.g_mv && i < 1500  && color != 0xff000000 && color != 0x00ffff)
+            data.color_maping[j][i] = 'G',
             img_pix_put(&data.img, i, j, color);
         else
+            data.color_maping[j][i] = 'W',
             img_pix_put(&data.img, i, j, set_design(3, i, (int)(64 / data.rays[i] * (j - forward2)) % 64, data.design));
         j++;
     }
@@ -251,8 +256,10 @@ void    cast_to_3d(int i)
             put_clob_tex_object(j, i - (RES_X / 3) * 2);
         color = (unsigned int)get_gun_color(i + data.aim * 4, j - data.g_mv);
         if (j > data.g_mv && i < 1500  && color != 0xff000000 && color != 0x00ffff)
+            data.color_maping[j][i] = 'G',
             img_pix_put(&data.img, i, j, color);
         else
+            data.color_maping[j][i] = 'F',
             img_pix_put(&data.img, i, j, get_color_22(((j - RES_Y / 2 + data.c)), 1));
         j++;
     }

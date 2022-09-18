@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 12:01:01 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/14 18:36:29 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/18 17:00:46 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,6 +232,7 @@ typedef struct s_enm
 	double		width; 
 	double		dist;
 	int			motion;
+	int			old_motion;
 	int			frm;
 	int			id;
 	int			x;
@@ -249,6 +250,7 @@ typedef struct s_data
 	t_img		img_c;
 	t_img		assets;
 	t_img		guns;
+	t_img		cross;
 	int			keys[1000];
 	int			height;
 	int			width;

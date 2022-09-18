@@ -6,13 +6,13 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 15:48:06 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/13 11:28:57 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/18 15:49:45 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
-int get_minimap_color2(int x, int y)
+int get_minimap_color2(int x, int y) 
 {
     double  c;
     double  s;
@@ -22,7 +22,7 @@ int get_minimap_color2(int x, int y)
 
     x -= 1345;
     y -= 935;
-    
+
     double xnew = x * c - y * s + 1345;
     double ynew = x * s + y * c + 935;
     

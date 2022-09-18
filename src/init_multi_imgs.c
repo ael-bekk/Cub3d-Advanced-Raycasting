@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/11 11:59:21 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/13 21:23:03 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/18 16:19:02 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,24 +73,35 @@ void    init_guns()
     init_gun(5, 27, path);
 }
 
-void    init_motion_imgs(int o, int len, char *path)
+void    init_motion_imgs(int o, int len, char *s, int path_len)
 {
     int i;
+    char path[100];
 
+    ft_memcpy(path, s, path_len);
     i = 0;
     while (++i < len)
     {
-        path_name2(path, i, 16); 
-        data.motion[o].frm[i - 1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, path, &data.motion[o].frm[i - 1].x, &data.motion[o].frm[i - 1].y);
+        path_name2(path, i, path_len);
+        data.motion[o].frm[i - 1].mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, path, &(data.motion[o].frm[i - 1].x), &(data.motion[o].frm[i - 1].y));
         data.motion[o].frm[i - 1].addr = mlx_get_data_addr(data.motion[o].frm[i - 1].mlx_img, &data.motion[o].frm[i - 1].bpp, &data.motion[o].frm[i - 1].line_len, &data.motion[o].frm[i - 1].endian);
     }
-    data.motion[o].frame = len - 7;
+    data.motion[o].frame = len - 1;
 }
 
 void    init_motion()
 {
-	char path[100];
+    init_motion_imgs(0, 17, "img/enemies/run/", 16);
 
-	ft_memcpy(path, "img/enemies/run/", 16);
-    init_motion_imgs(0, 23, path);
+    init_motion_imgs(1, 29, "img/enemies/walk/", 17);
+
+    init_motion_imgs(2, 51, "img/enemies/attack_1/", 21);
+
+    init_motion_imgs(3, 64, "img/enemies/attack_2/", 21);
+    
+    init_motion_imgs(4, 87, "img/enemies/attack_3/", 21);
+    
+    init_motion_imgs(5, 34, "img/enemies/hit/", 16);
+
+    init_motion_imgs(6, 82, "img/enemies/death/", 18);
 }
