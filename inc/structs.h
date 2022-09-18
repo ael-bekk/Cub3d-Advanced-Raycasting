@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 12:01:01 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/18 17:00:46 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/18 20:32:46 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,6 +229,8 @@ typedef struct s_gun
 /************************************************************************/
 typedef struct s_enm
 {
+	int			hit;
+	int			health;
 	double		width; 
 	double		dist;
 	int			motion;
@@ -251,6 +253,8 @@ typedef struct s_data
 	t_img		assets;
 	t_img		guns;
 	t_img		cross;
+	t_img		health_enm;
+	int			show_health;
 	int			keys[1000];
 	int			height;
 	int			width;

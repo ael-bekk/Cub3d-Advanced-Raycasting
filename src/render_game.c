@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:32:22 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/18 17:18:55 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/18 22:12:55 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -481,7 +481,21 @@ void    render_game()
 		}
 		else if (data.objects.w != 17 && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet) && (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame || !data.gun[data.objects.w].bullet))
 		{
+			if (!data.gun[data.objects.w].frame && data.show_health && data.color_maping[RES_Y / 2][RES_X / 2] == '*' && data.enemy[0].health > 0)
+				data.enemy[i].hit = (data.enemy[0].health % 2),
+				data.enemy[i].motion = 5,
+				data.enemy[0].health -= 105,
+				data.enemy[i].frm = 1;
+			else if (!data.gun[data.objects.w].frame && data.show_health && data.color_maping[RES_Y / 2][RES_X / 2] == '*' && data.enemy[0].health <= 0)
+			{
+				data.enemy[i].hit = -1;
+				data.enemy[i].motion = 6;
+				if (data.enemy[i].frm == data.motion[6].frame - 1)
+					data.enemy[i].frm = 66;
+			}
 			data.gun[data.objects.w].frame++;
+			
+
 			
 			if (!data.gun[data.objects.w].bullet && data.gun[data.objects.w].frame < data.gun[data.objects.w].f_shoot)
 				data.gun[data.objects.w].frame = data.gun[data.objects.w].f_shoot;
