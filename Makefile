@@ -21,7 +21,7 @@ clean:
 
 fclean: clean
 	make clean -C lib
-	$(RM) -fr img/guns/g1 img/guns/g2 img/guns/g3 img/guns/g4 img/guns/g5 img/guns/g6 img/guns/g7 img/guns/g8 img/guns/g9
+	$(RM) -fr img/guns/g1 img/guns/g2 img/guns/g3 img/guns/g4 img/guns/g5 img/guns/g6 img/guns/g7 img/guns/g8 img/guns/g9 img/enemies/attack_1 img/enemies/attack_2 img/enemies/attack_3 img/enemies/hit img/enemies/death img/enemies/walk img/enemies/run
 re: fclean all
 
 .PHONY: clean fclean all re

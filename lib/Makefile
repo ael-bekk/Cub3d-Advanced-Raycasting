@@ -14,6 +14,13 @@ CFLAGS+= -DSTRINGPUTX11
 all: $(NOM)
 
 $(NOM):	$(OBJ)
+	tar -xf ../img/enemies/attack_1.zip
+	tar -xf ../img/enemies/attack_2.zip
+	tar -xf ../img/enemies/attack_3.zip
+	tar -xf ../img/enemies/hit.zip
+	tar -xf ../img/enemies/death.zip
+	tar -xf ../img/enemies/walk.zip
+	tar -xf ../img/enemies/run.zip
 	tar -xf ../img/guns/g1.zip
 	tar -xf ../img/guns/g2.zip
 	tar -xf ../img/guns/g3.zip
@@ -24,6 +31,7 @@ $(NOM):	$(OBJ)
 	tar -xf ../img/guns/g8.zip
 	tar -xf ../img/guns/g9.zip
 	mv g* ../img/guns
+	mv attack_1 attack_2 attack_3 hit death walk run ../img/enemies
 	ar -r $(NOM) $(OBJ)
 	ranlib $(NOM)
 
