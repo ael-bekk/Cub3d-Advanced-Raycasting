@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 12:01:01 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/18 20:32:46 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/20 17:29:34 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,6 +254,7 @@ typedef struct s_data
 	t_img		guns;
 	t_img		cross;
 	t_img		health_enm;
+	t_img		lose;
 	int			show_health;
 	int			keys[1000];
 	int			height;
@@ -265,6 +266,7 @@ typedef struct s_data
 	char		**map;
 	int			*w_map;
 	int			h_map;
+	int			death;
 	t_mlx		mlx;
 	t_rgb		floor;
 	t_rgb		ceil;

@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/22 11:52:40 by mel-hada          #+#    #+#             */
-/*   Updated: 2022/09/18 20:33:38 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/20 17:29:47 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ void init_motions_enemies()
 
 void init_args(t_map **map)
 {
+    data.death = 0;
     data.c = 0;
     data.dir.ph = 0.5;
     data.floor.r = -1;

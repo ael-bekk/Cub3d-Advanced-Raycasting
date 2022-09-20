@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 15:16:54 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/18 21:41:01 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/20 17:39:14 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,14 +163,16 @@ int get_enemy_color(double x, double y)
     t_img *img;
 
     img = &(data.motion[data.enemy[0].motion].frm[data.enemy[0].frm]);
-    if (!data.enemy[0].motion || data.enemy[0].motion == 4 || data.enemy[0].motion == 6)
+    if (!data.enemy[0].motion || data.enemy[0].motion == 4)
     {
-        if ((int)round(y * (551.0 / 64.0)) - (25 - 5 * (data.enemy[0].motion == 5 || data.enemy[0].motion == 6)) < 0 || (int)round(y * (551.0 / 64.0)) - (25 - 5 * (data.enemy[0].motion == 5 || data.enemy[0].motion == 6)) >= img->y)
+        if ((int)round(y * (551.0 / 64.0)) - 25 < 0 || (int)round(y * (551.0 / 64.0)) - 25 >= img->y)
             return (0xff000000);
-        return (*(int *)(img->addr + ((((int)round(y * (551.0 / 64.0)) - (25 - 5 * (data.enemy[0].motion == 5 || data.enemy[0].motion == 6)))) * img->line_len + (int)round(x) * (img->bpp / 8))));
+        return (*(int *)(img->addr + ((((int)round(y * (551.0 / 64.0)) - 25)) * img->line_len + (int)round(x) * (img->bpp / 8))));
     }
     if (data.enemy[0].motion == 5)
         return (*(int *)(img->addr + ((((int)round((y * (380.0 / 64.0))) + 50)) * img->line_len + ((int)round((x * (300.0 / img->x))) + 80) * (img->bpp / 8))));
+    if (data.enemy[0].motion == 6)
+        return (*(int *)(img->addr + ((((int)round((y * (450.0 / 64.0))) + 70)) * img->line_len + ((int)round((x * (390.0 / img->x)))) * (img->bpp / 8))));
     if (data.enemy[0].motion == 1)
     {
         if ((int)round(y * (591.0 / 64.0)) - 60 < 0)
@@ -208,7 +210,7 @@ void    cast_to_3d_for_enemies(int start_x, int i, double dist)
     if (forward > RES_Y)
         forward = RES_Y;
     int start = start_x - data.enemy[i].width / 2;
-    data.enemy[i].width = dist - 170 * ((img_y / img_x) / dist) + 800 * (data.enemy[0].motion == 2) + 580 * (data.enemy[0].motion == 3) + 200 * (data.enemy[0].motion == 4 || data.enemy[0].motion == 6);
+    data.enemy[i].width = dist - 170 * ((img_y / img_x) / dist) + 800 * (data.enemy[0].motion == 2) + 580 * (data.enemy[0].motion == 3) + 200 * (data.enemy[0].motion == 4);
     while (++start < start_x + data.enemy[i].width / 2 && start < 1500)
     {
         if (start >= 0 && dist > data.rays[start])
@@ -303,14 +305,27 @@ void    sort_enemies()
             {
                 data.enemy[i].frm = 0,
                 data.enemy[i].motion++;
-                if (data.enemy[i].motion == 6)
+                if (data.enemy[i].motion >= 5)
                     data.enemy[i].motion = 2;
             }
-            if (data.enemy[i].motion == 4 || data.enemy[0].motion == 6)
+            if (data.enemy[i].motion == 4)
                 data.enemy[i].dist -= 15;
             if (data.enemy[i].dist < 0)
                 data.enemy[i].dist = 0;
             data.enemy[0].frm += 2;
+            if (data.enemy[0].frm > 10 && data.enemy[0].frm < 30 + 40 * (data.enemy[i].motion == 4) && data.enemy[0].motion > 1 && data.enemy[0].motion < 5)
+            {
+                if (data.enemy[0].frm < 30 && (data.enemy[i].motion == 4 ||  data.enemy[i].motion == 2))
+                    right_angle();
+                else if (data.enemy[i].motion == 4 && data.enemy[0].frm >= 50)
+                    data.c += 30 * (data.c + 30 < RES_Y - 200);
+                else
+                    left_angle();
+                data.bld = 80, 
+                paint_hit_blood(),
+                data.objects.health -= 10 * !(data.light % 5),
+                data.sound.hit = 1;
+            }
         }
         if (data.enemy[i].frm >= data.motion[data.enemy[i].motion].frame)
         {
@@ -321,7 +336,6 @@ void    sort_enemies()
 			    data.enemy[i].frm = data.motion[data.enemy[i].motion].frame - 1;
         }
         data.enemy[i].old_motion = data.enemy[i].motion;
-
         if (ang < 40 && ang > -40)
             data.show_health = 1,
             cast_to_3d_for_enemies(1750 - (ang + 40) / 0.04, i, data.enemy[i].dist);
@@ -344,14 +358,14 @@ void    health_left_for_enemy(t_img *img, int heath)
             else if ((i - 20) * (i - 20) + (j - 20) * (j - 20) - 10 * 10 > -2)
                 img_pix_put(img, i, j, 0);
             else
-                img_pix_put(img, i, j, 0xaa0000 * (i <= heath) + 0x700000 * (i > heath));
+                img_pix_put(img, i, j, 0xaa0000 * ((i - 10) <= heath) + 0x700000 * ((i - 10) > heath));
     }
     i--;
     while (++i < 1000)
     {
         j = 9;
         while (++j < 30)
-            img_pix_put(img, i, j, 0xaa0000 * (i <= heath) + 0x700000 * (i > heath));
+            img_pix_put(img, i, j, 0xaa0000 * ((i - 10) <= heath) + 0x700000 * ((i - 10) > heath));
     }
     i--;
     while (++i < 1020)
@@ -363,19 +377,23 @@ void    health_left_for_enemy(t_img *img, int heath)
             else if ((i - 1000) * (i - 1000) + (j - 20) * (j - 20) - 10 * 10 > -2)
                 img_pix_put(img, i, j, 0);
             else
-                img_pix_put(img, i, j, 0xaa0000 * (i <= heath) + 0x700000 * (i > heath));
+                img_pix_put(img, i, j, 0xaa0000 * ((i - 10) <= heath) + 0x700000 * ((i - 10) > heath));
     }
 }
 
 void    set_char_to_win()
 {
-    mlx_clear_window(data.mlx.mlx_ptr, data.mlx.win_ptr);
-
-    set_rays();
     int j = -1;
-    while (++j < data.enm_nb)
-        data.enemy[j].dist = sqrt((data.enemy[j].x - data.dir.x) * (data.enemy[j].x - data.dir.x) + (data.enemy[j].y - data.dir.y) * (data.enemy[j].y - data.dir.y));
-    sort_enemies();
+
+    mlx_clear_window(data.mlx.mlx_ptr, data.mlx.win_ptr);
+    if (data.death < 200)
+    {
+        set_rays();
+        j = -1;
+        while (++j < data.enm_nb)
+            data.enemy[j].dist = sqrt((data.enemy[j].x - data.dir.x) * (data.enemy[j].x - data.dir.x) + (data.enemy[j].y - data.dir.y) * (data.enemy[j].y - data.dir.y));
+        sort_enemies();
+    }
     if (data.show_health)
         health_left_for_enemy(&data.health_enm, data.enemy[0].health);
     // pthread_join(p, NULL);
@@ -399,6 +417,12 @@ void    set_char_to_win()
     mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.cross.mlx_img, RES_X / 2 - 20, RES_Y / 2 - 20);
     if (data.show_health)
         mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.health_enm.mlx_img, 150, RES_Y - 100);
+    if (data.enemy[0].frm > 10 && data.enemy[0].frm < 30 + 20 * (data.enemy[0].motion == 4) && data.enemy[0].motion > 1 && data.enemy[0].motion < 5)
+        mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.blood_hit2.mlx_img, 0, 0);
+    if (data.objects.health <= 0)
+        mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.lose.mlx_img, (RES_X - data.lose.x) / 2, (RES_Y - data.lose.y) / 2);
+    if (data.objects.health <= 0 && data.death < 200)
+        data.death++;
 }
 
 void    paint_img(t_img *img, char *path, int res_x, int res_y)
@@ -751,6 +775,9 @@ void    set_minimap()
     data.health_enm.mlx_img = mlx_new_image(data.mlx.mlx_ptr, 1020, 40);
     data.health_enm.addr = mlx_get_data_addr(data.health_enm.mlx_img, &data.health_enm.bpp, &data.health_enm.line_len, &data.health_enm.endian);
 
+    data.lose.mlx_img = mlx_xpm_file_to_image(data.mlx.mlx_ptr, "img/lose.xpm", &data.lose.x, &data.lose.y);
+    data.lose.addr = mlx_get_data_addr(data.lose.mlx_img, &data.lose.bpp, &data.lose.line_len, &data.lose.endian);
+    
     int i;
     i = -1;
     while (++i < 1000)

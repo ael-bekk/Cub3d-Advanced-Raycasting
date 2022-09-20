@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/21 12:41:47 by mel-hada          #+#    #+#             */
-/*   Updated: 2022/09/13 11:46:38 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/20 14:28:30 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,5 +92,7 @@ void    init_angles();
 char	*ft_itoa(int n);
 void    init_guns();
 void    init_motion();
-void    paint_img(t_img *img, char *path, int res_x, int res_y); 
+void    paint_img(t_img *img, char *path, int res_x, int res_y);
+void	paint_hit_blood();
+
 #endif
