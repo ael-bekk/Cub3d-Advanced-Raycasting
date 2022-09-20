@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 15:16:54 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/20 18:32:10 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/20 18:45:31 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,28 +158,28 @@ void    paint_img3(t_img *img, t_img *img2)
     }
 }
 
-int get_enemy_color(double x, double y)
+int get_enemy_color(double x, double y, int i)
 {
     t_img *img;
 
-    img = &(data.motion[data.enemy[0].motion].frm[data.enemy[0].frm]);
-    if (!data.enemy[0].motion || data.enemy[0].motion == 4)
+    img = &(data.motion[data.enemy[i].motion].frm[data.enemy[i].frm]);
+    if (!data.enemy[i].motion || data.enemy[i].motion == 4)
     {
         if ((int)round(y * (551.0 / 64.0)) - 25 < 0 || (int)round(y * (551.0 / 64.0)) - 25 >= img->y)
             return (0xff000000);
         return (*(int *)(img->addr + ((((int)round(y * (551.0 / 64.0)) - 25)) * img->line_len + (int)round(x) * (img->bpp / 8))));
     }
-    if (data.enemy[0].motion == 5)
+    if (data.enemy[i].motion == 5)
         return (*(int *)(img->addr + ((((int)round((y * (380.0 / 64.0))) + 50)) * img->line_len + ((int)round((x * (300.0 / img->x))) + 80) * (img->bpp / 8))));
-    if (data.enemy[0].motion == 6)
+    if (data.enemy[i].motion == 6)
         return (*(int *)(img->addr + ((((int)round((y * (450.0 / 64.0))) + 70)) * img->line_len + ((int)round((x * (390.0 / img->x)))) * (img->bpp / 8))));
-    if (data.enemy[0].motion == 1)
+    if (data.enemy[i].motion == 1)
     {
         if ((int)round(y * (591.0 / 64.0)) - 60 < 0)
             return (0xff000000);
         return (*(int *)(img->addr + ((((int)round((y * (591.0 / 64.0))) - 60)) * img->line_len + (int)round(x) * (img->bpp / 8))));
     }
-    if (data.enemy[0].motion == 3)
+    if (data.enemy[i].motion == 3)
     {
         if ((int)round(y * (460.0 / 64.0)) - 52 < 0 && x + 7 < img->x)
             return (0xff000000);
@@ -198,8 +198,8 @@ void    cast_to_3d_for_enemies(int start_x, int i, double dist)
     double img_x;
     double img_y;
 
-    img_x = data.motion[data.enemy[0].motion].frm[data.enemy[0].frm].x;
-    img_y = data.motion[data.enemy[0].motion].frm[data.enemy[0].frm].y;
+    img_x = data.motion[data.enemy[i].motion].frm[data.enemy[i].frm].x;
+    img_y = data.motion[data.enemy[i].motion].frm[data.enemy[i].frm].y;
     if (!dist)
         dist = 1;
     dist = round((50 * (RES_X / 2) / data.angles.cte_tan) / dist);
@@ -210,7 +210,7 @@ void    cast_to_3d_for_enemies(int start_x, int i, double dist)
     if (forward > RES_Y)
         forward = RES_Y;
     int start = start_x - data.enemy[i].width / 2;
-    data.enemy[i].width = dist - 170 * ((img_y / img_x) / dist) + 800 * (data.enemy[0].motion == 2) + 580 * (data.enemy[0].motion == 3) + 200 * (data.enemy[0].motion == 4);
+    data.enemy[i].width = dist - 170 * ((img_y / img_x) / dist) + 800 * (data.enemy[i].motion == 2) + 580 * (data.enemy[i].motion == 3) + 200 * (data.enemy[i].motion == 4);
     while (++start < start_x + data.enemy[i].width / 2 && start < 1500)
     {
         if (start >= 0 && dist > data.rays[start])
@@ -218,7 +218,7 @@ void    cast_to_3d_for_enemies(int start_x, int i, double dist)
             j = forward;
             while ((int)(64 / dist * (j - forward2)) < 64 && j < RES_Y)
             {
-                color = get_enemy_color((start - start_x + data.enemy[i].width / 2.0) * (img_x / data.enemy[i].width), (64 / dist * ((j - forward2))));
+                color = get_enemy_color((start - start_x + data.enemy[i].width / 2.0) * (img_x / data.enemy[i].width), (64 / dist * ((j - forward2))), i);
                 if (color < 0xff000000 && data.color_maping[j][start] != 'G' && data.color_maping[j][start] != '*')
                     data.color_maping[j][start] = '*',
                     img_pix_put(&data.img, start, j, color);
@@ -266,7 +266,7 @@ void    sort_enemies()
         tmp = i;
         j = i;
         while (++j < data.enm_nb)
-            if (data.enemy[j].dist < data.enemy[tmp].dist)
+            if (data.enemy[j].dist < data.enemy[tmp].dist && data.enemy[j].health > 0)
                 tmp = j;
         if (tmp != i)
         {
@@ -288,16 +288,18 @@ void    sort_enemies()
             if (data.enemy[i].old_motion)
                 data.enemy[i].frm = 0,
                 data.enemy[i].motion = 0;
-            up_monster(i, 5, angle);
-            data.enemy[0].frm++;
+            if (!i)
+                up_monster(i, 5, angle);
+            data.enemy[i].frm++;
         }
         else if (data.enemy[i].dist > 50 && !data.enemy[i].hit)
         {
             if (data.enemy[i].old_motion != 1)
                 data.enemy[i].frm = 0,
                 data.enemy[i].motion = 1;
-            up_monster(i, 1, angle);
-            data.enemy[0].frm++;
+            if (!i)
+                up_monster(i, 1, angle);
+            data.enemy[i].frm++;
         }
         else
         {
@@ -312,12 +314,12 @@ void    sort_enemies()
                 data.enemy[i].dist -= 15;
             if (data.enemy[i].dist < 0)
                 data.enemy[i].dist = 0;
-            data.enemy[0].frm += 2;
-            if (data.enemy[0].frm > 10 && data.enemy[0].frm < 30 + 40 * (data.enemy[i].motion == 4) && data.enemy[0].motion > 1 && data.enemy[0].motion < 5)
+            data.enemy[i].frm += 2;
+            if (data.enemy[i].frm > 10 && data.enemy[i].frm < 30 + 40 * (data.enemy[i].motion == 4) && data.enemy[i].motion > 1 && data.enemy[i].motion < 5)
             {
-                if (data.enemy[0].frm < 30 && (data.enemy[i].motion == 4 ||  data.enemy[i].motion == 2))
+                if (data.enemy[i].frm < 30 && (data.enemy[i].motion == 4 || data.enemy[i].motion == 2))
                     right_angle();
-                else if (data.enemy[i].motion == 4 && data.enemy[0].frm >= 50)
+                else if (data.enemy[i].motion == 4 && data.enemy[i].frm >= 50)
                     data.c += 30 * (data.c + 30 < RES_Y - 200);
                 else
                     left_angle();
