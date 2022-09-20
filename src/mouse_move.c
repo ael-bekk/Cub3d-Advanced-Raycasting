@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:24:38 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/13 11:28:59 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/20 17:46:21 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,7 @@ int mouse_move(int x, int y, void *w)
         mouse_move_control(x, y);
     else if (data.mode == G_MAP)
         mouse_move_map(x, y);
-    if (data.mode == GAME)
+    if (data.mode == GAME && data.objects.health > 0)
         mouse_move_game(x, y);
     else
         data.mouse.x = x,

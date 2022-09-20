@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:32:22 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/18 22:12:55 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/20 18:26:23 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -418,53 +418,87 @@ void    render_game()
 	{
 		// usleep(20000);
 		cnt = 0;
-		if (data.keys[data.intro.g_k[1]] && !data.keys[data.intro.g_k[9]] && (!data.fov.jumping && data.dir.ph >= 0.5))
-			data.c += 3 * (!!((data.mv / 5) % 2) - !((data.mv / 5) % 2)),
-			data.g_mv -= 3 * (!!((data.mv / 5) % 2) - !((data.mv++ / 5) % 2)),
-			up();
-		if (data.keys[data.intro.g_k[2]] && !data.keys[data.intro.g_k[9]])
-			data.c += 3 * (!!((data.mv / 5) % 2) - !((data.mv / 5) % 2)),
-			data.g_mv -= 3 * (!!((data.mv / 5) % 2) - !((data.mv++ / 5) % 2)),
-			down();
-		if (data.gun[data.objects.w].bullet && data.keys[data.intro.g_k[8]] && data.aim < 10)
+		if (data.objects.health > 0)
 		{
-			if (data.objects.w == 17)
-				data.gun[data.objects.w].frame = 53 + data.aim;
-			data.aim++;
-		}
-		else if ((!data.keys[data.intro.g_k[8]] || !data.gun[data.objects.w].bullet) && data.aim > 0)
-		{
-			if (data.objects.w == 17)
-				data.gun[data.objects.w].frame = 53 + data.aim;
-			if (data.objects.w == 17 && data.aim == 1)
-				data.gun[data.objects.w].frame = 15;
-			if (data.zoom > 0)
-				data.zoom--;
-			else
-				data.aim--;
-		}
-		if (data.objects.w == 4 && data.use_gun++ > 100)
-		{
-			data.gun[data.objects.w].frame++;
-			if (data.gun[data.objects.w].frame < data.gun[data.objects.w].f_reload)
-				data.gun[data.objects.w].frame = data.gun[data.objects.w].f_reload;
-			if (data.gun[data.objects.w].frame == 51)
-				data.gun[data.objects.w].frame = 0,
-				data.use_gun = 0;
-		}
-		else if (data.objects.w == 17 && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet) && (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame || !data.gun[data.objects.w].bullet))
-		{
-			if (data.aim && data.objects.w == 17)
+			if (data.keys[data.intro.g_k[1]] && !data.keys[data.intro.g_k[9]] && (!data.fov.jumping && data.dir.ph >= 0.5))
+				data.c += 3 * (!!((data.mv / 5) % 2) - !((data.mv / 5) % 2)),
+				data.g_mv -= 3 * (!!((data.mv / 5) % 2) - !((data.mv++ / 5) % 2)),
+				up();
+			if (data.keys[data.intro.g_k[2]] && !data.keys[data.intro.g_k[9]])
+				data.c += 3 * (!!((data.mv / 5) % 2) - !((data.mv / 5) % 2)),
+				data.g_mv -= 3 * (!!((data.mv / 5) % 2) - !((data.mv++ / 5) % 2)),
+				down();
+			if (data.gun[data.objects.w].bullet && data.keys[data.intro.g_k[8]] && data.aim < 10)
 			{
-				if (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame > 63)
-					data.gun[data.objects.w].frame++;
-				if (data.gun[data.objects.w].frame > 80 && data.gun[data.objects.w].bullet)
-					data.gun[data.objects.w].frame = 63,
-					data.gun[data.objects.w].bullet--;
+				if (data.objects.w == 17)
+					data.gun[data.objects.w].frame = 53 + data.aim;
+				data.aim++;
 			}
-			else
+			else if ((!data.keys[data.intro.g_k[8]] || !data.gun[data.objects.w].bullet) && data.aim > 0)
+			{
+				if (data.objects.w == 17)
+					data.gun[data.objects.w].frame = 53 + data.aim;
+				if (data.objects.w == 17 && data.aim == 1)
+					data.gun[data.objects.w].frame = 15;
+				if (data.zoom > 0)
+					data.zoom--;
+				else
+					data.aim--;
+			}
+			if (data.objects.w == 4 && data.use_gun++ > 100)
 			{
 				data.gun[data.objects.w].frame++;
+				if (data.gun[data.objects.w].frame < data.gun[data.objects.w].f_reload)
+					data.gun[data.objects.w].frame = data.gun[data.objects.w].f_reload;
+				if (data.gun[data.objects.w].frame == 51)
+					data.gun[data.objects.w].frame = 0,
+					data.use_gun = 0;
+			}
+			else if (data.objects.w == 17 && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet) && (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame || !data.gun[data.objects.w].bullet))
+			{
+				if (data.aim && data.objects.w == 17)
+				{
+					if (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame > 63)
+						data.gun[data.objects.w].frame++;
+					if (data.gun[data.objects.w].frame > 80 && data.gun[data.objects.w].bullet)
+						data.gun[data.objects.w].frame = 63,
+						data.gun[data.objects.w].bullet--;
+				}
+				else
+				{
+					data.gun[data.objects.w].frame++;
+					if (!data.gun[data.objects.w].bullet && data.gun[data.objects.w].frame < data.gun[data.objects.w].f_shoot)
+						data.gun[data.objects.w].frame = data.gun[data.objects.w].f_shoot;
+					if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_shoot && data.gun[data.objects.w].bullet)
+						data.gun[data.objects.w].frame = 0,
+						data.gun[data.objects.w].bullet--;
+					if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_reload && !data.gun[data.objects.w].bullet)
+						data.gun[data.objects.w].frame = 0,
+						data.gun[data.objects.w].case_bullet--,
+						data.gun[data.objects.w].bullet = 12;
+					data.use_gun = 0;
+					if (data.gun[data.objects.w].frame < 2 && data.objects.w == 13 && data.keys[data.intro.g_k[7]] && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet))
+						data.gun[data.objects.w].frame = 2;
+				}
+			}
+			else if (data.objects.w != 17 && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet) && (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame || !data.gun[data.objects.w].bullet))
+			{
+				if (!data.gun[data.objects.w].frame && data.show_health && data.color_maping[RES_Y / 2][RES_X / 2] == '*' && data.enemy[0].health > 0)
+					data.enemy[i].hit = (data.enemy[0].health % 2),
+					data.enemy[i].motion = 5,
+					data.enemy[0].health -= 105,
+					data.enemy[i].frm = 1;
+				else if (!data.gun[data.objects.w].frame && data.show_health && data.color_maping[RES_Y / 2][RES_X / 2] == '*' && data.enemy[0].health <= 0)
+				{
+					data.enemy[i].hit = -1;
+					data.enemy[i].motion = 6;
+					if (data.enemy[i].frm == data.motion[6].frame - 1)
+						data.enemy[i].frm = 66;
+				}
+				data.gun[data.objects.w].frame++;
+				
+
+				
 				if (!data.gun[data.objects.w].bullet && data.gun[data.objects.w].frame < data.gun[data.objects.w].f_shoot)
 					data.gun[data.objects.w].frame = data.gun[data.objects.w].f_shoot;
 				if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_shoot && data.gun[data.objects.w].bullet)
@@ -478,102 +512,70 @@ void    render_game()
 				if (data.gun[data.objects.w].frame < 2 && data.objects.w == 13 && data.keys[data.intro.g_k[7]] && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet))
 					data.gun[data.objects.w].frame = 2;
 			}
-		}
-		else if (data.objects.w != 17 && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet) && (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame || !data.gun[data.objects.w].bullet))
-		{
-			if (!data.gun[data.objects.w].frame && data.show_health && data.color_maping[RES_Y / 2][RES_X / 2] == '*' && data.enemy[0].health > 0)
-				data.enemy[i].hit = (data.enemy[0].health % 2),
-				data.enemy[i].motion = 5,
-				data.enemy[0].health -= 105,
-				data.enemy[i].frm = 1;
-			else if (!data.gun[data.objects.w].frame && data.show_health && data.color_maping[RES_Y / 2][RES_X / 2] == '*' && data.enemy[0].health <= 0)
+			else if (data.objects.w == 9 && (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame))
 			{
-				data.enemy[i].hit = -1;
-				data.enemy[i].motion = 6;
-				if (data.enemy[i].frm == data.motion[6].frame - 1)
-					data.enemy[i].frm = 66;
+				data.gun[data.objects.w].frame++;
+				if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_shoot)
+					data.gun[data.objects.w].frame = 0;
 			}
-			data.gun[data.objects.w].frame++;
-			
 
-			
-			if (!data.gun[data.objects.w].bullet && data.gun[data.objects.w].frame < data.gun[data.objects.w].f_shoot)
-				data.gun[data.objects.w].frame = data.gun[data.objects.w].f_shoot;
-			if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_shoot && data.gun[data.objects.w].bullet)
-				data.gun[data.objects.w].frame = 0,
-				data.gun[data.objects.w].bullet--;
-			if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_reload && !data.gun[data.objects.w].bullet)
-				data.gun[data.objects.w].frame = 0,
-				data.gun[data.objects.w].case_bullet--,
-				data.gun[data.objects.w].bullet = 12;
-    		data.use_gun = 0;
-			if (data.gun[data.objects.w].frame < 2 && data.objects.w == 13 && data.keys[data.intro.g_k[7]] && (data.gun[data.objects.w].bullet || data.gun[data.objects.w].case_bullet))
-				data.gun[data.objects.w].frame = 2;
+			if (!data.intro.g_k[0])
+			{
+				if (data.keys[UP])
+					data.c -= 25 * (-data.c + 25 < RES_Y - 200);
+				if (data.keys[DOWN])
+					data.c += 25 * (data.c + 25 < RES_Y - 200);
+				if (data.keys[LEFT])
+					left_angle();
+				if (data.keys[RIGHT])
+					right_angle();
+			}
+			if (data.keys[data.intro.g_k[3]])
+				data.c += 3 * (!!((data.mv / 5) % 2) - !((data.mv / 5) % 2)),
+				data.g_mv -= 3 * (!!((data.mv / 5) % 2) - !((data.mv++ / 5) % 2)),
+				left();
+			if (data.keys[data.intro.g_k[4]])
+				data.c += 3 * (!!((data.mv / 5) % 2) - !((data.mv / 5) % 2)),
+				data.g_mv -= 3 * (!!((data.mv / 5) % 2) - !((data.mv++ / 5) % 2)),
+				right();
+			if (data.fov.jumping && data.dir.ph > 0.2)
+				data.speed = -1,
+				data.dir.ph -= 0.07,
+				up();
+			else if (ac >= 2)
+				data.fov.jumping = 0;
+			else if (data.fov.jumping)
+				ac++,
+				up();
+			if (!data.fov.jumping && data.dir.ph < 0.5)
+				ac = 0,
+				data.speed = -1,
+				data.dir.ph += 0.07,
+				up();
+
+			if (!data.sound.breath && !data.keys[data.intro.g_k[2]] && data.keys[data.intro.g_k[9]] && abs(data.c) < 10 && (!data.fov.jumping && data.dir.ph >= 0.5))
+				c++,
+				data.speed = 3,
+				data.c = (ac++ % 4) * (c % 4 - !(c % 4)),
+				up();
+			else if (!data.sound.breath && !data.keys[data.intro.g_k[2]] && data.keys[data.intro.g_k[9]] && (!data.fov.jumping && data.dir.ph >= 0.5))
+				c++,
+				data.speed = 3,
+				data.c += (15 * (data.c < 0) - 15 * (data.c > 0)) * !!(c % 3) + (3 * (data.c > 0) - 3 * (data.c < 0)) * !(c % 3),
+				up();
+
+			if (data.sound.breath && abs(data.c) < 40)
+				c++,
+				data.c = 3.0 / 20.0 * (ac++ % 20) * (c % 20 - !(c % 20));
+			else if (data.sound.breath)
+				c++,
+				data.c += 3.0 / 18.0 * (15 * (data.c < 0) - 15 * (data.c > 0)) * !!(c % 18) + (18 * (data.c > 0) - 18 * (data.c < 0)) * !(c % 18);
+
+			if (data.fov.crouching && data.dir.ph < 0.8)
+				data.dir.ph += 0.05;
+			if (!data.fov.crouching && data.dir.ph > 0.5)
+				data.dir.ph -= 0.05;
 		}
-		else if (data.objects.w == 9 && (data.keys[data.intro.g_k[7]] || data.gun[data.objects.w].frame))
-		{
-			data.gun[data.objects.w].frame++;
-			if (data.gun[data.objects.w].frame > data.gun[data.objects.w].f_shoot)
-				data.gun[data.objects.w].frame = 0;
-		}
-
-		if (!data.intro.g_k[0])
-		{
-			if (data.keys[UP])
-				data.c -= 25 * (-data.c + 25 < RES_Y - 200);
-			if (data.keys[DOWN])
-				data.c += 25 * (data.c + 25 < RES_Y - 200);
-			if (data.keys[LEFT])
-				left_angle();
-			if (data.keys[RIGHT])
-				right_angle();
-		}
-		if (data.keys[data.intro.g_k[3]])
-			data.c += 3 * (!!((data.mv / 5) % 2) - !((data.mv / 5) % 2)),
-			data.g_mv -= 3 * (!!((data.mv / 5) % 2) - !((data.mv++ / 5) % 2)),
-			left();
-		if (data.keys[data.intro.g_k[4]])
-			data.c += 3 * (!!((data.mv / 5) % 2) - !((data.mv / 5) % 2)),
-			data.g_mv -= 3 * (!!((data.mv / 5) % 2) - !((data.mv++ / 5) % 2)),
-			right();
-		if (data.fov.jumping && data.dir.ph > 0.2)
-			data.speed = -1,
-			data.dir.ph -= 0.07,
-			up();
-		else if (ac >= 2)
-			data.fov.jumping = 0;
-		else if (data.fov.jumping)
-			ac++,
-			up();
-		if (!data.fov.jumping && data.dir.ph < 0.5)
-			ac = 0,
-			data.speed = -1,
-			data.dir.ph += 0.07,
-			up();
-
-		if (!data.sound.breath && !data.keys[data.intro.g_k[2]] && data.keys[data.intro.g_k[9]] && abs(data.c) < 10 && (!data.fov.jumping && data.dir.ph >= 0.5))
-			c++,
-			data.speed = 3,
-			data.c = (ac++ % 4) * (c % 4 - !(c % 4)),
-			up();
-		else if (!data.sound.breath && !data.keys[data.intro.g_k[2]] && data.keys[data.intro.g_k[9]] && (!data.fov.jumping && data.dir.ph >= 0.5))
-			c++,
-			data.speed = 3,
-			data.c += (15 * (data.c < 0) - 15 * (data.c > 0)) * !!(c % 3) + (3 * (data.c > 0) - 3 * (data.c < 0)) * !(c % 3),
-			up();
-
-		if (data.sound.breath && abs(data.c) < 40)
-			c++,
-			data.c = 3.0 / 20.0 * (ac++ % 20) * (c % 20 - !(c % 20));
-		else if (data.sound.breath)
-			c++,
-			data.c += 3.0 / 18.0 * (15 * (data.c < 0) - 15 * (data.c > 0)) * !!(c % 18) + (18 * (data.c > 0) - 18 * (data.c < 0)) * !(c % 18);
-
-		if (data.fov.crouching && data.dir.ph < 0.8)
-			data.dir.ph += 0.05;
-		if (!data.fov.crouching && data.dir.ph > 0.5)
-			data.dir.ph -= 0.05;
-		
 		data.door.is_op = 1;
 		if (data.keys[data.intro.g_k[6]] || data.keys[999 - SCROLL_UP] || data.keys[999 - SCROLL_DOWN] || data.keys[data.intro.g_k[9]] || data.keys[UP] || data.keys[data.intro.g_k[1]] || data.keys[DOWN] || data.keys[data.intro.g_k[2]] || data.keys[LEFT] || data.keys[RIGHT] || data.keys[data.intro.g_k[3]] || data.keys[data.intro.g_k[4]])
 			set_char_to_win(),

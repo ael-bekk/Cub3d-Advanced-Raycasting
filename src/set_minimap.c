@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 15:16:54 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/20 17:39:14 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/20 18:32:10 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -386,14 +386,11 @@ void    set_char_to_win()
     int j = -1;
 
     mlx_clear_window(data.mlx.mlx_ptr, data.mlx.win_ptr);
-    if (data.death < 200)
-    {
-        set_rays();
-        j = -1;
-        while (++j < data.enm_nb)
-            data.enemy[j].dist = sqrt((data.enemy[j].x - data.dir.x) * (data.enemy[j].x - data.dir.x) + (data.enemy[j].y - data.dir.y) * (data.enemy[j].y - data.dir.y));
-        sort_enemies();
-    }
+    set_rays();
+    j = -1;
+    while (++j < data.enm_nb)
+        data.enemy[j].dist = sqrt((data.enemy[j].x - data.dir.x) * (data.enemy[j].x - data.dir.x) + (data.enemy[j].y - data.dir.y) * (data.enemy[j].y - data.dir.y));
+    sort_enemies();
     if (data.show_health)
         health_left_for_enemy(&data.health_enm, data.enemy[0].health);
     // pthread_join(p, NULL);
@@ -422,7 +419,15 @@ void    set_char_to_win()
     if (data.objects.health <= 0)
         mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.lose.mlx_img, (RES_X - data.lose.x) / 2, (RES_Y - data.lose.y) / 2);
     if (data.objects.health <= 0 && data.death < 200)
+    {
+        data.c += 25 * (data.c + 25 < RES_Y - 200);
         data.death++;
+        if (data.dir.ph < 0.9)
+			data.dir.ph += 0.05;
+        if (data.death < 20)
+            data.speed = -6,
+            up();
+    }
 }
 
 void    paint_img(t_img *img, char *path, int res_x, int res_y)

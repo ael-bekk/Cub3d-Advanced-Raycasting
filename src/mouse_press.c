@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 14:40:53 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 15:23:55 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/20 17:46:47 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ int mouse_press(int key, int x, int y, void *w)
         mouse_press_control(key, x, y);
     else if (data.mode == G_MAP)
         mouse_press_map(key);
-    else if (data.mode == GAME)
+    else if (data.mode == GAME && data.objects.health > 0)
         mouse_press_game(key);
     return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:20:15 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/11 14:44:52 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/20 17:44:38 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,27 +116,30 @@ void    key_press_map(int key)
 
 void    key_press_game(int key)
 {
-    if (key == F1 && data.mouse.show)
-        mlx_mouse_hide(),
-        data.mouse.show = 0;
-    else if (key == F1)
-        mlx_mouse_show(),
-        data.mouse.show = 1;
-    if (key == data.intro.g_k[10])
-        data.mode = G_MAP,
-        data.intro.up = !data.intro.up;
-    if (key == data.intro.g_k[6])
-        data.fov.crouching = !data.fov.crouching,
-        data.fov.jumping = 0;
-    if (key == data.intro.g_k[5] && ((!data.fov.jumping && data.dir.ph == 0.5) || data.fov.crouching))
-        data.fov.jumping = !data.fov.jumping,
-        data.fov.crouching = 0;
+    if (data.objects.health > 0)
+    {
+        if (key == F1 && data.mouse.show)
+            mlx_mouse_hide(),
+            data.mouse.show = 0;
+        else if (key == F1)
+            mlx_mouse_show(),
+            data.mouse.show = 1;
+        if (key == data.intro.g_k[10])
+            data.mode = G_MAP,
+            data.intro.up = !data.intro.up;
+        if (key == data.intro.g_k[6])
+            data.fov.crouching = !data.fov.crouching,
+            data.fov.jumping = 0;
+        if (key == data.intro.g_k[5] && ((!data.fov.jumping && data.dir.ph == 0.5) || data.fov.crouching))
+            data.fov.jumping = !data.fov.jumping,
+            data.fov.crouching = 0;
 
-    data.keys[key] = 1;
-    if (key == data.intro.g_k[7] && data.use_gun > 100)
-        data.use_gun = 0;
-    if (key == SPACE)
-        data.fov.crouching = 0;
+        data.keys[key] = 1;
+        if (key == data.intro.g_k[7] && data.use_gun > 100)
+            data.use_gun = 0;
+        if (key == SPACE)
+            data.fov.crouching = 0;
+    }
     if (key == ESC)
         data.mode = ANIMATE_SETT2_IN,
         set_char_to_win(),
