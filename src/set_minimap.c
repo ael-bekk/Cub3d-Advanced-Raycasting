@@ -6,7 +6,7 @@
 /*   By: ael-bekk <ael-bekk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 15:16:54 by ael-bekk          #+#    #+#             */
-/*   Updated: 2022/09/20 18:45:31 by ael-bekk         ###   ########.fr       */
+/*   Updated: 2022/09/21 15:56:15 by ael-bekk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,7 +266,7 @@ void    sort_enemies()
         tmp = i;
         j = i;
         while (++j < data.enm_nb)
-            if (data.enemy[j].dist < data.enemy[tmp].dist && data.enemy[j].health > 0)
+            if (data.enemy[j].dist < data.enemy[tmp].dist)
                 tmp = j;
         if (tmp != i)
         {
@@ -341,7 +341,6 @@ void    sort_enemies()
         if (ang < 40 && ang > -40)
             data.show_health = 1,
             cast_to_3d_for_enemies(1750 - (ang + 40) / 0.04, i, data.enemy[i].dist);
-
     }
 }
 
