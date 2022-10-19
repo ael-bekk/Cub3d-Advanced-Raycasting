@@ -8,18 +8,19 @@ The goal of ``cub3d`` is to make *something* using raycasting (like [Wolfenstein
 This project is written in ``c`` using ``mini-libx`` Library, 
 This old library has a little builtin-funcs that's can make my project show on the graphics
 
-# Preview
+## Preview 1
 <img src="https://github.com/ael-bekk/cube3d_advanced_raycasting/blob/main/img_srces/Blank%208%20Grids%20Collage.png" width=700 height=600/>
 
+## Preview 2
 <a href="https://www.youtube.com/watch?v=fO-BOwalGnk" alt="By ael-bekk">
 <img src="https://github.com/ael-bekk/cube3d_advanced_raycasting/blob/main/img_srces/Screen%20Shot%202022-10-19%20at%208.44.20%20PM.png" width=700 height=400/>
 </a>
 
 
-# Walk Through:
+## Walk Through:
   [Documentation](https://github.com/ael-bekk/cube3d_advanced_raycasting/blob/main/note.md)
 
-# Commands
+## Commands
 
 | KEY           | Action        |
 | ------------- |:-------------:|
