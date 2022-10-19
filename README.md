@@ -24,8 +24,9 @@ This old library has a little builtin-funcs that's can make my project show on t
 | KEY           | Action        |
 | ------------- |:-------------:|
 | `ESC`         | manual control     |
-| `SPACE BAR`   | jump         |
-| `ENTER`         | crouch |
+| `SPACE BAR`   | run         |
+| `ENTER`         | jump |
+| `CONTROL`         | crouch |
 | `A`           | move left     |
 | `D`           | move right    |
 | `W`           | move forward  |
