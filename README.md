@@ -9,63 +9,32 @@ This project is written in ``c`` using ``mini-libx`` Library,
 This old library has a little builtin-funcs that's can make my project show on the graphics
 
 # Preview
-![Logo](https://github.com/ael-bekk/cube3d_advanced_raycasting/blob/main/img_srces/Blank%208%20Grids%20Collage.png)
+<img src="https://github.com/ael-bekk/cube3d_advanced_raycasting/blob/main/img_srces/Blank%208%20Grids%20Collage.png" width=700 height=600/>
+
+<a href="https://www.youtube.com/watch?v=fO-BOwalGnk" alt="By ael-bekk">
+<img src="https://github.com/ael-bekk/cube3d_advanced_raycasting/blob/main/img_srces/Screen%20Shot%202022-10-19%20at%208.44.20%20PM.png" width=700 height=400/>
+</a>
+
 
 # Walk Through:
+  [Documentation](https://github.com/ael-bekk/cube3d_advanced_raycasting/blob/main/note.md)
 
-### ``Raycasting`` :
- -First I implimented a normal `raycast` from player position (x, y) :
-  ```
-        x += decrease * cos(angl * M_PI / 180);
-        y += decrease * sin(angl * M_PI / 180);
-  ```
- -Until i reatch the wall and calculate the `distance` between start_pos(x0, y0) and end_pos(x1, y1) :
-  ```
-    dist = sqrt((x0 - x1)*(x0 - x1) + (y0 - y1)*(y0 - y1));
-  ```
- -Fixed the `fisheye` :
-  ```
-    dist *= cos(angl * M_PI / 180);
-  ```
- 
- -I use every distance to draw a line vertically using the `projection formula` :
- ```
-  distance_between_player_and_projection_plan : (WIDTH_OF_THE_WIN / 2) / tan(30 * M_PI / 180).
-  distance_between_player_and_wall (that we calculate using raycasting) : dist. 
-  wall_hight = round((ACTUAL_WALL_HIGHT * (WIDTH_OF_THE_WIN / 2) / tan(30 * M_PI / 180)) / dist);
- ```
+# Commands
 
--After adding many things, I know that I have to optimize my code, Then I used a lock-up tables, for not calling the `cos-sin-tan` built-in funcs many times :
-  ```
-     void    change_angle()
-    {
-        double  r;
-        double  angl;
-        int     i;
+| KEY           | Action        |
+| ------------- |:-------------:|
+| `ESC`         | manual control     |
+| `SPACE BAR`   | jump         |
+| `ENTER`         | crouch |
+| `A`           | move left     |
+| `D`           | move right    |
+| `W`           | move forward  |
+| `S`           | move backward |
+| `→`           | turn right    |
+| `←`           | turn left     |
+| `shift`       | hide/display map|
+| `MOUSE RIGHT CLICK`           | shoot |
+| `MOUSE LEFT CLICK`           | aim - focus|
+| `MOUSE SCROLL`      | change weapon |
 
-        i = -1;
-        r = -30; // r = - (FOV / 2) : in my case -(60 / 2)
-        while (++i < WIDTH_OF_THE_WIN)
-        {
-            angl = data.player.angle + r;
-            data.angles.r_cos[i] = cos(angl * M_PI / 180);
-            data.angles.r_sin[i] = sin(angl * M_PI / 180);
-            data.angles.r_res_cos[i] = cos(r * M_PI / 180);
-            r += 0.04; // r += FOV / WIDTH_OF_THE_WIN : in my case (60 / 1500)
-        }
-        data.angles.pl_cos = cos(data.player.angle * M_PI / 180);
-        data.angles.pl_sin = sin(data.player.angle * M_PI / 180);
-        data.angles.pl_cos_plus_90 = cos((data.player.angle + 90) * M_PI / 180);
-        data.angles.pl_sin_plus_90 = sin((data.player.angle + 90) * M_PI / 180);
-        data.angles.cte_tan = tan(30 * M_PI / 180);
-    }
-  ```
-  After that, I call the `cos-sin-tan` just in case the player's direction has changed to the left or right.
-
-### ``Advanced Raycasting`` :
-
-
-### ``Textures or Aseets`` :
-
-### ``Extra Features`` :
-
+you can customize the control keys inside the game's setting
