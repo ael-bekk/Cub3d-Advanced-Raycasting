@@ -49,7 +49,8 @@
   ```
   Now, I'm calling the `cos-sin-tan` just in case the player's direction has been changed to the left or right.
  
-  ~Until now all was easy.
+  ~Until now all was easy, and for more details about this part <a href="https://github.com/Toufa7/Cub3D/blob/main/Readme.md"  target="_blank" alt="By ael-bekk">Check This Documentation</a>.
+
 
 ### ``Advanced Raycasting`` :
   ~The challenge started when I came to this part, because I had already added some features that would take this part to another level of difficulty, especially these two (player jumping and crouching).
