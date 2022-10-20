@@ -6,7 +6,7 @@
         x += decrease * cos(angl * M_PI / 180);
         y += decrease * sin(angl * M_PI / 180);
   ```
- ~Until i reatch the wall and calculate the `distance` between start_pos(x0, y0) and end_pos(x1, y1) :
+ ~Until i reach the wall and calculate the `distance` between start_pos(x0, y0) and end_pos(x1, y1) :
   ```
     dist = sqrt((x0 - x1)*(x0 - x1) + (y0 - y1)*(y0 - y1));
   ```
@@ -56,10 +56,24 @@
   
   ~First I have to take a position from the window and try to project it on the actual map, to do so:
   
-  ~Get the angle of the point we are looking at by taking the cos of the the player angle - the current ray angle to get the x_dist between the player and the 
+  step 1- Get the angle of the point I are looking at by taking the cosine of the the player angle - the current ray angle
  
-  
+  step 2- Then I take another angle for the distance on the y direction, I do that by dividing the size of your ground tile times the y position - half the screen height  and diving that again by the calculated angle in step 1. Then I multiply the result by half the screen size
+ 
+  step 3- After that I calculate the texture x position, by taking the cosine of the ray angle, multiplying it by the rseult of step 2 and adding the real player x position on the map to it (real means not the minimap value)
+ 
+  step 4- Then I do the same for the texture y value, by taking the sine of the ray angle, multiplying it by step 2 and adding the real player y position
+ 
+  step 5- Lastly I get the color for the current pixel from the texture, by taking step 4 % texture size and adding texture size * step 3 % texture size, basically what you should do with walls already
+ 
+  step 6- I's the additional part and it was the hard part because i had to make the seen stable whenever the player jump or crouch then i moddified
+the step 2
+to be like this way : 
+
+I changed `the half of the screen height` to be `the half of the screen height + the screen height * (wher the player eyes on the screen from (0->1) the diffolt is 0.5 the middle of the screen)`
 
 ### ``Textures or Aseets`` :
-
+  ~First I used the flood fill algorithm to separate each room from another.
+  
+  ~I creat a 7 diffrent desine of rooms by taking 
 ### ``Extra Features`` :
