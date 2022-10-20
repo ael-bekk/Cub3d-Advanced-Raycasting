@@ -39,7 +39,7 @@ This old library has a little builtin-funcs that's can make my project show on t
 | `MOUSE LEFT CLICK`           | aim - focus|
 | `MOUSE SCROLL`      | change weapon |
 
-you can customize the control keys inside the game's setting
+you can customize the control keys inside the game settings
 
 ## Run Programe:
 
