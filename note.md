@@ -49,7 +49,7 @@
   ```
   Now, I'm calling the `cos-sin-tan` just in case the player's direction has been changed to the left or right.
  
-  ~Until now all was easy, and for more details about this part <a href="https://github.com/Toufa7/Cub3D/blob/main/Readme.md"  target="_blank" alt="By ael-bekk">Check This Documentation</a>.
+  ~Until now all was easy, and for more details about this part [Check This Documentation](https://github.com/Toufa7/Cub3D/blob/main/Readme.md?param1=value1?target=_blank).
 
 
 ### ``Advanced Raycasting`` :
@@ -76,5 +76,42 @@ I changed `the half of the screen height` to be `the half of the screen height +
 ### ``Textures or Aseets`` :
   ~First I used the flood fill algorithm to separate each room from another.
   
-  ~I creat a 7 diffrent desine of rooms by taking 
+  ~I creat a 7 diffrent desine of rooms by taking the offset of differant parts and all was toking from one image :
+  ![texture](https://github.com/ael-bekk/cube3d_advanced_raycasting/blob/main/img_srces/AnyConv.com__textures.png)
+  
+  exemple `Room A`:
+  
+  Floor===>`Start from x = 96px and y = 40 there 7 textures horizontaly and for each collomn ther are one texture`
+  
+  Wall====>`Start from x = 456 and y = 40 there 7 textures horizontaly and for each collomn ther are 2 textures`
+  
+  cillen===>`Start from x = 1392px and y = 40 there 4 textures horizontaly and for each collomn ther are 4 textures`
+  
+  ```
+  //--------------------------- :::  room {A}  ::: ---------------------------//
+     # define FLOOR2_START__X 96
+     # define FLOOR2_START__Y 40
+     # define FLOOR2_SIZE_Y 7
+     # define FLOOR2_SIZE_X 1
+
+     # define CART1_START__X 456
+     # define CART1_START__Y 40
+     # define CART1_SIZE_Y 7
+     # define CART1_SIZE_X 2
+
+     # define SUPPORT_START__X 1392
+     # define SUPPORT_START__Y 40
+     # define SUPPORT_SIZE_X 4
+     # define SUPPORT_SIZE_Y 4
+  ```
 ### ``Extra Features`` :
+
+ .`LOOK UP-DOWN`:
+ 
+ .`JUMP` :
+ 
+ .`CROUCH` :
+ 
+ .`ZOOM` :
+ 
+ 
