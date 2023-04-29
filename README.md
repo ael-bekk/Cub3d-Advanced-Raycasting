@@ -39,4 +39,26 @@ This old library has a little builtin-funcs that's can make my project show on t
 | `MOUSE LEFT CLICK`           | aim - focus|
 | `MOUSE SCROLL`      | change weapon |
 
-you can customize the control keys inside the game's setting
+you can customize the control keys inside the game settings
+
+## Run Programe:
+
+_ if you'ar a 42-student :
+
+```
+  cd /Users/$USER/goinfre ; git clone git@github.com:ael-bekk/cube3d_advanced_raycasting.git
+  cd cube3d_advanced_raycasting ; make ; ./cub3d maps/test.map
+```
+
+_ if not :
+
+```
+  git clone git@github.com:ael-bekk/cube3d_advanced_raycasting.git
+  cd cube3d_advanced_raycasting ; make ; ./cub3d maps/test.cub
+```
+
+## 📝 License
+
+This project is licensed under the MIT - see the [LICENSE](LICENSE) file for details.
+
+---
