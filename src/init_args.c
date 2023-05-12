@@ -149,7 +149,7 @@ void init_args(t_map **map)
     data.intro.up = 0;
     data.door.op = 15;
     data.door.is_op = 0;
-    data.mode = GAME;
+    data.mode = INTRO;
     data.light = 0;
     data.bld = 0;
     data.sound.hover = 0;
