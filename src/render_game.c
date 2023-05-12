@@ -171,6 +171,9 @@ void    render_intro2()
 	if (i == 64 * 2)
 		f = 0;
 	if (i == 64 * 3)
+		i = 0,
+		f = 0,
+		data.mouse.clicked = 0,
 		data.mode = SETTING;
 }
 
